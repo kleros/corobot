@@ -23,7 +23,7 @@ A Bot to watch for Kleros Governor events and respond with notifications and tra
 
 > To run the service in production mode use `node -r dotenv/config index.js`.
 
-> To start with PM2 use `pm2 start --node-args="-r dotenv/config" index.js --name gtcr-notifications`
+> To start with PM2 use `pm2 start --node-args="-r dotenv/config" index.js --name governor-bot`
 
 ## Other Scripts
 
@@ -34,5 +34,3 @@ A Bot to watch for Kleros Governor events and respond with notifications and tra
 ## Contributing
 
 See CONTRIBUTING.md.
-
-Learn how to develop arbitrable and arbitrator contracts [here](https://erc-792.readthedocs.io/en/latest/).
