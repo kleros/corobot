@@ -5,3 +5,10 @@ if (!process.env.PROVIDER_URL) {
   )
   process.exit(1)
 }
+
+if (!process.env.GOVERNOR_ADDRESS) {
+  console.error(
+    'Governor address not set. Please set the GOVERNOR_ADDRESS environment variable'
+  )
+  process.exit(1)
+}
