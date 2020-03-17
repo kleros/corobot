@@ -12,3 +12,17 @@ if (!process.env.GOVERNOR_ADDRESS) {
   )
   process.exit(1)
 }
+
+if (!process.env.SUBMITTER_ADDRESS) {
+  console.error(
+    'Submitter address not set. Please set the SUBMITTER_ADDRESS environment variable'
+  )
+  process.exit(1)
+}
+
+if (!process.env.WALLET_KEY) {
+  console.error(
+    'Private key not set. Please set the WALLET_KEY environment variable so the bot can send transactions to execute submissions'
+  )
+  process.exit(1)
+}
