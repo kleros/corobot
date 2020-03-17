@@ -11,7 +11,9 @@ module.exports = async ({
   governor,
   lastApprovalTime,
   timestamp,
-  currentSessionNumber
+  currentSessionNumber,
+  chainName,
+  chainId
 }) => {
   // Did we pass ALARM_THRESHOLD_SECONDS?
   if (
@@ -31,7 +33,7 @@ module.exports = async ({
       `Governor Warning: ${truncateETHAddress(
         process.env.SUBMITTER_ADDRESS
       )} did not submit any lists.`,
-      `No submissions by ${process.env.SUBMITTER_ADDRESS} found for the current session. \n Please visit ${process.env.UI_PATH} and submit a list ASAP!`
+      `no submissions by ${process.env.SUBMITTER_ADDRESS} found for the current session. \n Please visit ${process.env.UI_PATH} and submit a list ASAP!`
     )
     return
   }
@@ -45,10 +47,12 @@ module.exports = async ({
       .map(({ submitter }) => submitter)
       .includes(process.env.SUBMITTER_ADDRESS)
   )
-    await alarm(
-      `Governor Warning: Someone submitted a list to governor but ${truncateETHAddress(
+    await alarm({
+      subject: `Governor Warning: Someone submitted a list to governor but ${truncateETHAddress(
         process.env.SUBMITTER_ADDRESS
       )} did not.`,
-      `No submissions by ${process.env.SUBMITTER_ADDRESS} found for the current session, but another address submitted a list. \n Please visit ${process.env.UI_PATH}, check the submission and submit a list ASAP!`
-    )
+      message: `no submissions by ${process.env.SUBMITTER_ADDRESS} found for the current session, but another address submitted a list. \n Please visit ${process.env.UI_PATH}, check the submission and submit a list ASAP!`,
+      chainName,
+      chainId
+    })
 }

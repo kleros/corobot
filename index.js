@@ -2,7 +2,6 @@
 require('./utils/env-check')
 
 const ethers = require('ethers')
-const sgMail = require('@sendgrid/mail')
 const _KlerosGovernor = require('@kleros/kleros/build/contracts/KlerosGovernor.json')
 
 const bots = [
@@ -10,20 +9,6 @@ const bots = [
   require('./bots/no-list-submitted'),
   require('./bots/low-balance')
 ]
-
-// Setup SendGrid if keys were provided.
-const mailingEnvVariablesSet =
-  process.env.SENDGRID_API_KEY &&
-  process.env.TEMPLATE_ID &&
-  process.env.FROM_ADDRESS &&
-  process.env.FROM_NAME &&
-  process.env.UI_PATH &&
-  process.env.WATCHERS
-
-if (mailingEnvVariablesSet) {
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY)
-  sgMail.setSubstitutionWrappers('{{', '}}')
-}
 
 // Setup provider contract instance.
 const provider = new ethers.providers.JsonRpcProvider(process.env.PROVIDER_URL)
@@ -41,15 +26,18 @@ setInterval(async () => {
     latestBlock,
     submissionTimeout,
     signerAddress,
-    currentSessionNumber
+    currentSessionNumber,
+    network
   ] = await Promise.all([
     governor.lastApprovalTime(),
     provider.getBlock('latest'),
     governor.submissionTimeout(),
     signer.getAddress(),
-    governor.getCurrentSessionNumber()
+    governor.getCurrentSessionNumber(),
+    signer.getNetwork()
   ])
   const { timestamp } = latestBlock
+  const { name: chainName, chainId } = network
 
   bots.forEach(bot =>
     bot({
@@ -59,7 +47,9 @@ setInterval(async () => {
       signerAddress,
       currentSessionNumber,
       signer,
-      governor
+      governor,
+      chainId,
+      chainName
     })
   )
 }, Number(process.env.POLL_INTERVAL_MILLISECONDS) || 5 * 60 * 1000)
