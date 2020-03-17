@@ -2,6 +2,7 @@
 require('./utils/env-check')
 
 const ethers = require('ethers')
+const level = require('level')
 const _KlerosGovernor = require('@kleros/kleros/build/contracts/KlerosGovernor.json')
 
 const bots = [
@@ -18,6 +19,9 @@ const governor = new ethers.Contract(
   _KlerosGovernor.abi,
   signer
 )
+
+// Open DB
+const db = level('./db')
 
 setInterval(async () => {
   console.info('Running bot...')
@@ -49,7 +53,8 @@ setInterval(async () => {
       signer,
       governor,
       chainId,
-      chainName
+      chainName,
+      db
     })
   )
 }, Number(process.env.POLL_INTERVAL_MILLISECONDS) || 5 * 60 * 1000)
