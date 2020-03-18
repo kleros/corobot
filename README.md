@@ -1,5 +1,5 @@
 <p align="center">
-  <b style="font-size: 32px;">Kleros Governor Bot</b>
+  <b style="font-size: 32px;">Corobot</b>
 </p>
 
 <p align="center">
