@@ -17,9 +17,12 @@ module.exports = async ({
     console.info('In approval period, calling executeSubmissions...')
     try {
       await governor.executeSubmissions()
-      console.info('Done calling executeSubmissions.')
     } catch (err) {
+      console.error('Error executing submissions')
       console.error(err)
+      return
     }
+
+    console.info('Done calling executeSubmissions.')
   }
 }

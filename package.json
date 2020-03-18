@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon -r dotenv/config index.js",
     "format": "eslint '**/*.js' --fix",
-    "clean": "rimraf ./db/* && nodetouch ./db/.gitignore",
+    "clean": "rimraf ./db/* && nodetouch ./db/.gitkeep",
     "release": "standard-version"
   },
   "author": "Kleros",

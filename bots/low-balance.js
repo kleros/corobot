@@ -8,7 +8,15 @@ const alarm = require('../utils/alarm')
 const DB_KEY = 'LOW_BALANCE'
 
 module.exports = async ({ signer, signerAddress, chainName, chainId, db }) => {
-  const balance = await signer.getBalance()
+  let balance
+  try {
+    balance = await signer.getBalance()
+    console.info('Wallet balance:', formatEther(balance))
+  } catch (err) {
+    console.error('Error fetching signer balance.')
+    throw err
+  }
+
   const threshold = process.env.BALANCE_THRESHOLD_ETH
     ? parseEther(process.env.BALANCE_THRESHOLD_ETH)
     : parseEther('0.05')
@@ -19,7 +27,7 @@ module.exports = async ({ signer, signerAddress, chainName, chainId, db }) => {
   // Did 48 hours pass since the last alarm?
   let lastAlarmTime = 0
   try {
-    lastAlarmTime = db.get(DB_KEY)
+    lastAlarmTime = await db.get(DB_KEY)
   } catch (err) {
     if (err.type !== 'NotFoundError') throw new Error(err)
   }

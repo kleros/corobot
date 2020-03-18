@@ -23,8 +23,10 @@ const governor = new ethers.Contract(
 // Open DB
 const db = level('./db')
 
-setInterval(async () => {
-  console.info('Running bot...')
+console.info('Booting...')
+const runBots = async () => {
+  console.info('')
+  console.info('Checking alarms...')
   const [
     lastApprovalTime,
     latestBlock,
@@ -38,7 +40,7 @@ setInterval(async () => {
     governor.submissionTimeout(),
     signer.getAddress(),
     governor.getCurrentSessionNumber(),
-    signer.getNetwork()
+    provider.getNetwork()
   ])
   const { timestamp } = latestBlock
   const { name: chainName, chainId } = network
@@ -57,4 +59,10 @@ setInterval(async () => {
       db
     })
   )
-}, Number(process.env.POLL_INTERVAL_MILLISECONDS) || 5 * 60 * 1000)
+}
+
+runBots() // Run bots on startup.
+setInterval(
+  runBots,
+  Number(process.env.POLL_INTERVAL_MILLISECONDS) || 5 * 60 * 1000
+)

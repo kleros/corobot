@@ -1,11 +1,7 @@
-const ethers = require('ethers')
 const alarm = require('../utils/alarm')
 const { truncateETHAddress } = require('../utils/strings')
 
-const { bigNumberify } = ethers.utils
-
-const ALARM_THRESHOLD_SECONDS =
-  process.env.ALARM_THRESHOLD_SECONDS || 3 * 24 * 60 * 60
+const DB_KEY = 'NO_LIST_SUBMITTED'
 
 module.exports = async ({
   governor,
@@ -13,40 +9,88 @@ module.exports = async ({
   timestamp,
   currentSessionNumber,
   chainName,
-  chainId
+  submissionTimeout,
+  chainId,
+  db
 }) => {
-  // Did we pass ALARM_THRESHOLD_SECONDS?
-  if (
-    bigNumberify(timestamp)
-      .sub(lastApprovalTime)
-      .lte(bigNumberify(ALARM_THRESHOLD_SECONDS))
-  )
-    return
+  // Did we pass the net alarm threshold.
+  let state = {
+    lastAlarmTime: 0,
+    notificationCount: 0,
+    currentSessionNumber: currentSessionNumber.toNumber()
+  }
+  try {
+    const savedState = JSON.parse(await db.get(DB_KEY))
+    if (Number(savedState.currentSessionNumber) === state.currentSessionNumber)
+      state = savedState
+  } catch (err) {
+    if (err.type !== 'NotFoundError') throw new Error(err)
+  }
+
+  const { lastAlarmTime, notificationCount } = state
+
+  let nextAlarmThreshold =
+    lastApprovalTime.toNumber() +
+    submissionTimeout.toNumber() * (1 - 1 / (notificationCount + 2))
+
+  if (nextAlarmThreshold < lastAlarmTime + 60 * 60)
+    nextAlarmThreshold = lastAlarmTime + 60 * 60
+
+  if (timestamp < nextAlarmThreshold) return
 
   // Did address SUBMITTER_ADDRESS submit a list
   // before 3 days since lastApprovalTime?
-  const submittedListIndexes = await governor.getSubmittedLists(
-    currentSessionNumber
-  )
+  let submittedListIndexes
+  try {
+    submittedListIndexes = await governor.getSubmittedLists(
+      currentSessionNumber
+    )
+  } catch (err) {
+    console.error(
+      `Error getting submitted lists. currentSessionNumber: ${currentSessionNumber.toString()}`
+    )
+    throw err
+  }
+
   if (submittedListIndexes.length === 0) {
-    await alarm(
-      `Governor Warning: ${truncateETHAddress(
+    await alarm({
+      subject: `Governor Warning: ${truncateETHAddress(
         process.env.SUBMITTER_ADDRESS
-      )} did not submit any lists.`,
-      `no submissions by ${process.env.SUBMITTER_ADDRESS} found for the current session. \n Please visit ${process.env.UI_PATH} and submit a list ASAP!`
+      )} did not submit a list.`,
+      message: `no submissions by ${process.env.SUBMITTER_ADDRESS} found for the current session. \n Please visit ${process.env.UI_PATH} and submit a list ASAP!`,
+      chainName,
+      chainId
+    })
+    await db.put(
+      DB_KEY,
+      JSON.stringify({
+        lastAlarmTime: timestamp,
+        notificationCount: notificationCount + 1,
+        currentSessionNumber: currentSessionNumber.toNumber()
+      })
     )
     return
   }
 
-  const submittedLists = await Promise.all(
-    submittedListIndexes.map(i => governor.submissions(i.toString()))
-  )
+  let submittedLists
+  try {
+    submittedLists = await Promise.all(
+      submittedListIndexes.map(i => governor.submissions(i.toString()))
+    )
+  } catch (err) {
+    console.error(
+      `Error fetching submissions. Indexes ${submittedListIndexes.map(i =>
+        i.toString()
+      )}`
+    )
+    throw err
+  }
 
   if (
     !submittedLists
       .map(({ submitter }) => submitter)
       .includes(process.env.SUBMITTER_ADDRESS)
-  )
+  ) {
     await alarm({
       subject: `Governor Warning: Someone submitted a list to governor but ${truncateETHAddress(
         process.env.SUBMITTER_ADDRESS
@@ -55,4 +99,13 @@ module.exports = async ({
       chainName,
       chainId
     })
+    await db.put(
+      DB_KEY,
+      JSON.stringify({
+        lastAlarmTime: timestamp,
+        notificationCount: notificationCount + 1,
+        currentSessionNumber: currentSessionNumber.toNumber()
+      })
+    )
+  }
 }
