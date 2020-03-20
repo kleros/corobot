@@ -27,4 +27,5 @@ module.exports = async ({ subject, message, chainId, chainName }) => {
       }
     })
   }
+  console.info('')
 }
