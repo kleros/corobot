@@ -13,9 +13,9 @@ if (!process.env.GOVERNOR_ADDRESS) {
   process.exit(1)
 }
 
-if (!process.env.SUBMITTER_ADDRESS) {
+if (!process.env.SUBMITTER_ADDRESSES) {
   console.error(
-    'Submitter address not set. Please set the SUBMITTER_ADDRESS environment variable.'
+    'Submitter addresses not set. Please set the SUBMITTER_ADDRESSES environment variable.'
   )
   process.exit(1)
 }

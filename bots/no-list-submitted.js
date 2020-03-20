@@ -1,5 +1,4 @@
 const alarm = require('../utils/alarm')
-const { truncateETHAddress } = require('../utils/strings')
 
 const DB_KEY = 'NO_LIST_SUBMITTED'
 
@@ -38,8 +37,8 @@ module.exports = async ({
 
   if (timestamp < nextAlarmThreshold) return
 
-  // Did address SUBMITTER_ADDRESS submit a list
-  // before 3 days since lastApprovalTime?
+  // Did any of the SUBMITTER_ADDRESSESES submit a list
+  // before the alarm thershold?
   let submittedListIndexes
   try {
     submittedListIndexes = await governor.getSubmittedLists(
@@ -54,10 +53,8 @@ module.exports = async ({
 
   if (submittedListIndexes.length === 0) {
     await alarm({
-      subject: `Governor Warning: ${truncateETHAddress(
-        process.env.SUBMITTER_ADDRESS
-      )} did not submit a list.`,
-      message: `no submissions by ${process.env.SUBMITTER_ADDRESS} found for the current session. \n Please visit ${process.env.UI_PATH} and submit a list ASAP!`,
+      subject: `Governor Warning: No one submitted a list for this session.`,
+      message: `no one made any submissions in the current session. \n Please visit ${process.env.UI_PATH} and submit a list ASAP!`,
       chainName,
       chainId
     })
@@ -86,16 +83,15 @@ module.exports = async ({
     throw err
   }
 
+  const submitterAddresses = JSON.parse(process.env.SUBMITTER_ADDRESSES)
   if (
     !submittedLists
       .map(({ submitter }) => submitter)
-      .includes(process.env.SUBMITTER_ADDRESS)
+      .some(submitter => submitterAddresses.includes(submitter))
   ) {
     await alarm({
-      subject: `Governor Warning: Someone submitted a list to governor but ${truncateETHAddress(
-        process.env.SUBMITTER_ADDRESS
-      )} did not.`,
-      message: `no submissions by ${process.env.SUBMITTER_ADDRESS} found for the current session, but another address submitted a list. \n Please visit ${process.env.UI_PATH}, check the submission and submit a list ASAP!`,
+      subject: `Governor Warning: Someone submitted a list to governor but none of the team members did.`,
+      message: `no submissions were made by the whitelisted addresses in the current session, but another address submitted a list. \n Please visit ${process.env.UI_PATH}, check the submission and if needed, submit a list ASAP!`,
       chainName,
       chainId
     })
