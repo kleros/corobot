@@ -24,9 +24,7 @@ module.exports = async ({ governor, currentSessionNumber, db }) => {
     )
   ).filter(a => a.approved)
 
-  if (approvedSubmission.length === 0) {
-    return
-  }
+  if (approvedSubmission.length === 0) return
 
   const listID = approvedSubmission[0].listID
 
