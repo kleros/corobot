@@ -32,7 +32,7 @@ module.exports = async ({ governor, currentSessionNumber, db }) => {
   console.info('Approved List ID', listID.toNumber())
   await governor.executeTransactionList(listID, 0, 0)
 
-  await db.put(DB_KEY, sessionToExecute)
+  await db.put(DB_KEY, JSON.stringify(sessionToExecute))
   console.info('Done executing approved transactions.')
   console.info('')
 }

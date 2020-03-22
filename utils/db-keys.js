@@ -1,0 +1,7 @@
+const NO_LIST_SUBMITTED = 'NO_LIST_SUBMITTED'
+const LOW_BALANCE = 'LOW_BALANCE'
+
+module.exports = {
+  NO_LIST_SUBMITTED,
+  LOW_BALANCE
+}

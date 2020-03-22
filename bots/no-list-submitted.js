@@ -1,6 +1,5 @@
 const alarm = require('../utils/alarm')
-
-const DB_KEY = 'NO_LIST_SUBMITTED'
+const { NO_LIST_SUBMITTED: DB_KEY } = require('../utils/db-keys')
 
 module.exports = async ({
   governor,
@@ -12,21 +11,31 @@ module.exports = async ({
   chainId,
   db
 }) => {
-  // Did we pass the net alarm threshold.
   let state = {
     lastAlarmTime: 0,
     notificationCount: 0,
-    currentSessionNumber: currentSessionNumber.toNumber()
+    currentSessionNumber: currentSessionNumber.toNumber(),
+    disarmed: false
   }
+
   try {
     const savedState = JSON.parse(await db.get(DB_KEY))
-    if (Number(savedState.currentSessionNumber) === state.currentSessionNumber)
+
+    // Check if we already sent at least one alarm for this session.
+    // If so, load the state from the DB to check if we should send another one.
+    if (
+      Number(savedState.currentSessionNumber) ===
+      state.currentSessionNumber - 1
+    )
       state = savedState
   } catch (err) {
     if (err.type !== 'NotFoundError') throw new Error(err)
   }
 
-  const { lastAlarmTime, notificationCount } = state
+  const { lastAlarmTime, notificationCount, disarmed } = state
+
+  // Check if the alarm was manually disarmed for this sesion.
+  if (disarmed) return
 
   let nextAlarmThreshold =
     lastApprovalTime.toNumber() +
@@ -35,7 +44,7 @@ module.exports = async ({
   if (nextAlarmThreshold < lastAlarmTime + 60 * 60)
     nextAlarmThreshold = lastAlarmTime + 60 * 60
 
-  if (timestamp < nextAlarmThreshold) return
+  if (timestamp < nextAlarmThreshold) return // Did not reach threshold yet.
 
   // Did any of the SUBMITTER_ADDRESSESES submit a list
   // before the alarm thershold?

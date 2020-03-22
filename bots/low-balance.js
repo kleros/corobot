@@ -3,9 +3,9 @@ const {
     utils: { parseEther, formatEther }
   }
 } = require('ethers')
-const alarm = require('../utils/alarm')
 
-const DB_KEY = 'LOW_BALANCE'
+const alarm = require('../utils/alarm')
+const { NO_LIST_SUBMITTED: DB_KEY } = require('../utils/db-keys')
 
 module.exports = async ({ signer, signerAddress, chainName, chainId, db }) => {
   let balance
@@ -35,7 +35,7 @@ module.exports = async ({ signer, signerAddress, chainName, chainId, db }) => {
   const nowHours = Date.now() / 1000 / 60 / 60
   if (nowHours - lastAlarmTime < 48) return
 
-  await db.put(DB_KEY, nowHours)
+  await db.put(DB_KEY, JSON.stringify(nowHours))
   alarm({
     subject: 'Governor warning: Bot is running low on ETH',
     message: `the governor bot wallet at ${signerAddress} is running low on ETH.\nIf it runs out of ETH it will no longe be able to executeSubmissions and pass periods.\n\n Balance when this email was dispatched: ${formatEther(
