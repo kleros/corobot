@@ -6,6 +6,7 @@ sgMail.setSubstitutionWrappers('{{', '}}')
 module.exports = async ({ subject, message, chainId, chainName }) => {
   const emails = JSON.parse(process.env.WATCHERS)
   console.info('Sounding alarms!')
+  console.info('Subject:', subject)
 
   for (const email of Object.keys(emails)) {
     const nickname = emails[email]
