@@ -1,4 +1,4 @@
-const DB_KEY = 'LAST_EXECUTED_SESSION'
+const { LAST_EXECUTED_SESSION: DB_KEY } = require('../utils/db-keys')
 
 module.exports = async ({ governor, currentSessionNumber, db }) => {
   const sessionToExecute = currentSessionNumber.toNumber() - 1
