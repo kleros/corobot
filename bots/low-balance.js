@@ -33,7 +33,7 @@ module.exports = async ({ signer, signerAddress, chainName, chainId, db }) => {
   }
 
   const nowHours = Date.now() / 1000 / 60 / 60
-  if (nowHours - lastAlarmTime < 48) return
+  if (nowHours - lastAlarmTime < 24 * 3) return
 
   await db.put(DB_KEY, JSON.stringify(nowHours))
   alarm({
