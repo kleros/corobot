@@ -46,8 +46,7 @@ module.exports = async ({
 
   if (timestamp < nextAlarmThreshold) return // Did not reach threshold yet.
 
-  // Did any of the SUBMITTER_ADDRESSESES submit a list
-  // before the alarm thershold?
+  // Did anyone submit a list before the alarm thershold?
   let submittedListIndexes
   try {
     submittedListIndexes = await governor.getSubmittedLists(
@@ -63,7 +62,7 @@ module.exports = async ({
   if (submittedListIndexes.length === 0) {
     await alarm({
       subject: `Governor Warning: No one submitted a list for this session.`,
-      message: `no one made any submissions in the current session. \n Please visit ${process.env.UI_PATH} and submit a list ASAP!`,
+      message: `no one made any submissions in the current session. \n Please visit ${process.env.GOVERNOR_URL} and submit a list ASAP!`,
       chainName,
       chainId
     })
@@ -78,6 +77,7 @@ module.exports = async ({
     return
   }
 
+  // Is the submitter one of SUBMITTER_ADDRESSES?
   let submittedLists
   try {
     submittedLists = await Promise.all(
@@ -100,7 +100,7 @@ module.exports = async ({
   ) {
     await alarm({
       subject: `Governor Warning: Someone submitted a list to governor but none of the team members did.`,
-      message: `no submissions were made by the whitelisted addresses in the current session, but another address submitted a list. \n Please visit ${process.env.UI_PATH}, check the submission and if needed, submit a list ASAP!`,
+      message: `no submissions were made by the whitelisted addresses in the current session, but another address submitted a list. \n Please visit ${process.env.GOVERNOR_URL}, check the submission and if needed, submit a list ASAP!`,
       chainName,
       chainId
     })

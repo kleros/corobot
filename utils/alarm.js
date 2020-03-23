@@ -20,10 +20,11 @@ module.exports = async ({ subject, message, chainId, chainName }) => {
       dynamic_template_data: {
         subject,
         message: `${nickname}, ${message}`,
-        uiPath: process.env.UI_PATH,
+        uiPath: process.env.GOVERNOR_URL,
         chainName,
         chainId,
-        governorAddr: process.env.GOVERNOR_ADDRESS
+        governorAddr: process.env.GOVERNOR_ADDRESS,
+        botPath: process.env.BOT_URL
       }
     })
   }

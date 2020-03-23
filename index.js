@@ -13,7 +13,8 @@ const bots = [
   require('./bots/pass-period'),
   require('./bots/no-list-submitted'),
   require('./bots/low-balance'),
-  require('./bots/execute-approved')
+  require('./bots/execute-approved'),
+  require('./bots/submit-list')
 ]
 
 // Setup provider contract instance.
@@ -69,7 +70,9 @@ const runBots = async () => {
 runBots() // Run bots on startup.
 setInterval(
   runBots,
-  Number(process.env.POLL_INTERVAL_MILLISECONDS) || 5 * 60 * 1000
+  process.env.POLL_INTERVAL_MILLISECONDS
+    ? Number(process.env.POLL_INTERVAL_MILLISECONDS)
+    : 5 * 60 * 1000 // Default, 5 minutes
 )
 
 // Configure and start server.
@@ -122,3 +125,4 @@ const server = http.createServer(app)
 server.listen(port)
 server.on('error', onError)
 server.on('listening', onListening)
+console.info('')

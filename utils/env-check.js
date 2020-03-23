@@ -33,28 +33,42 @@ if (!process.env.SENDGRID_API_KEY) {
   )
   process.exit(1)
 }
+
 if (!process.env.TEMPLATE_ID) {
   console.error(
     'SendGrid template ID not set. Please set the TEMPLATE_ID environment variable.'
   )
   process.exit(1)
 }
+
 if (!process.env.FROM_ADDRESS) {
   console.error(
     'Email from address not set. Please set the FROM_ADDRESS environment variable.'
   )
   process.exit(1)
 }
+
 if (!process.env.FROM_NAME) {
   console.error(
     'Email from name field not set. Please set the FROM_NAME environment variable.'
   )
   process.exit(1)
 }
-if (!process.env.UI_PATH) {
-  console.error('UI path not set. Please set the UI_PATH environment variable.')
+
+if (!process.env.GOVERNOR_URL) {
+  console.error(
+    'Governor UI path not set. Please set the GOVERNOR_URL environment variable.'
+  )
   process.exit(1)
 }
+
+if (!process.env.BOT_URL) {
+  console.error(
+    'Alarm UI path not set. Please set the BOT_URL environment variable.'
+  )
+  process.exit(1)
+}
+
 if (!process.env.WATCHERS) {
   console.error(
     'Watchers object not set. Please set the WATCHERS environment variable.'
