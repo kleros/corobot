@@ -48,6 +48,7 @@ const runBots = async () => {
     governor.getCurrentSessionNumber(),
     provider.getNetwork()
   ])
+  console.info('Bot wallet:', signerAddress)
   const { timestamp } = latestBlock
   const { name: chainName, chainId } = network
 
@@ -116,6 +117,7 @@ const onListening = () => {
   const addr = server.address()
   const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr.port}`
   console.info('Listening on', bind)
+  console.info('')
 }
 
 const port = process.env.PORT || '3000'
@@ -125,4 +127,3 @@ const server = http.createServer(app)
 server.listen(port)
 server.on('error', onError)
 server.on('listening', onListening)
-console.info('')
