@@ -31,7 +31,10 @@ module.exports = async ({
 
     // Check if we already sent at least one alarm for this session.
     // If so, load the state from the DB to check if we should send another one.
-    if (Number(savedState.currentSessionNumber) === state.currentSessionNumber)
+    if (
+      savedState &&
+      Number(savedState.currentSessionNumber) === state.currentSessionNumber
+    )
       state = savedState
   } catch (err) {
     if (err.type !== 'NotFoundError') throw new Error(err)

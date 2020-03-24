@@ -22,6 +22,7 @@ module.exports = async ({
   try {
     const savedState = JSON.parse(await db.get(NO_LIST_SUBMITTED))
     disarmed =
+      savedState &&
       savedState.disarmed &&
       Number(savedState.currentSessionNumber) ===
         currentSessionNumber.toNumber()
