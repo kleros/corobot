@@ -1,3 +1,7 @@
+const ethers = require('ethers')
+
+const { getAddress } = ethers.utils
+
 // Web3
 if (!process.env.PROVIDER_URL) {
   console.error(
@@ -18,6 +22,25 @@ if (!process.env.SUBMITTER_ADDRESSES) {
     'Submitter addresses not set. Please set the SUBMITTER_ADDRESSES environment variable.'
   )
   process.exit(1)
+}
+
+try {
+  const submitterAddresses = JSON.parse(process.env.SUBMITTER_ADDRESSES)
+  if (!Array.isArray(submitterAddresses)) {
+    console.error(
+      'SUBMITTER_ADDRESSES should be an array of checksummed addresses'
+    )
+    process.exit(1)
+  }
+
+  // getAddress will throw if one of the addresses is not a checksummed address.
+  submitterAddresses.forEach(submitterAddr => getAddress(submitterAddr))
+} catch (err) {
+  console.error('Error in SUBMITTER_ADDRESSES env variable.')
+  console.error(
+    'SUBMITTER_ADDRESSES should be an array of checksummed addresses'
+  )
+  throw err
 }
 
 if (!process.env.WALLET_KEY) {
