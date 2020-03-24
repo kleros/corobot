@@ -3,7 +3,13 @@ const sgMail = require('@sendgrid/mail')
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 sgMail.setSubstitutionWrappers('{{', '}}')
 
-module.exports = async ({ subject, message, chainId, chainName }) => {
+module.exports = async ({
+  subject,
+  message,
+  chainId,
+  chainName,
+  secondary
+}) => {
   const emails = JSON.parse(process.env.WATCHERS)
   console.info('')
   console.info('Sounding alarms!')
@@ -26,7 +32,7 @@ module.exports = async ({ subject, message, chainId, chainName }) => {
         chainName,
         chainId,
         governorAddr: process.env.GOVERNOR_ADDRESS,
-        botPath: process.env.BOT_URL
+        secondary
       }
     })
   }

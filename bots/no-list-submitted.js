@@ -75,7 +75,8 @@ module.exports = async ({
       subject: `Governor Warning: No one submitted a list for this session.`,
       message: `no one made any submissions in the current session. \n Please visit ${process.env.GOVERNOR_URL} and submit a list ASAP!`,
       chainName,
-      chainId
+      chainId,
+      secondary: `To disable the alarm for this section, click <a href=${process.env.BOT_URL}>here</a>`
     })
     await db.put(
       NO_LIST_SUBMITTED,
@@ -117,7 +118,8 @@ module.exports = async ({
       subject: `Governor Warning: Someone submitted a list to governor but none of the team members did.`,
       message: `no submissions were made by the whitelisted addresses in the current session, but another address submitted a list. \n Please visit ${process.env.GOVERNOR_URL}, check the submission and if needed, submit a list ASAP!`,
       chainName,
-      chainId
+      chainId,
+      secondary: `To disable the alarm for this section, click <a href=${process.env.BOT_URL}>here</a>`
     })
     await db.put(
       NO_LIST_SUBMITTED,
