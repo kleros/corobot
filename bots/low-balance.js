@@ -36,10 +36,7 @@ module.exports = async ({ signer, signerAddress, chainName, chainId, db }) => {
   if (nowHours - lastAlarmTime < 24 * 3) return
 
   console.info('Wallet balance is below threshold.')
-  console.info(
-    'Balance threshold:',
-    process.env.process.env.BALANCE_THRESHOLD_ETH
-  )
+  console.info('Balance threshold:', process.env.BALANCE_THRESHOLD_ETH)
   console.info('Last alarm time:', new Date(lastAlarmTime * 60 * 60 * 1000))
   console.info('')
 
