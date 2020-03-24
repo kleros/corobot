@@ -119,7 +119,7 @@ module.exports = async ({
       message: `no submissions were made by the whitelisted addresses in the current session, but another address submitted a list. \n Please visit ${process.env.GOVERNOR_URL}, check the submission and if needed, submit a list ASAP!`,
       chainName,
       chainId,
-      secondary: `To disable the alarm for this section, click <a href=${process.env.BOT_URL}>here</a>`
+      secondary: `To disable the alarm for this section, click <a href="${process.env.BOT_URL}">here</a>`
     })
     await db.put(
       NO_LIST_SUBMITTED,
