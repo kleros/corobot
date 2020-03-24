@@ -1,4 +1,4 @@
-const { LAST_EXECUTED_SESSION: DB_KEY } = require('../utils/db-keys')
+const { LAST_EXECUTED_SESSION } = require('../utils/db-keys')
 
 module.exports = async ({ governor, currentSessionNumber, db }) => {
   const sessionToExecute = currentSessionNumber.toNumber() - 1
@@ -6,7 +6,7 @@ module.exports = async ({ governor, currentSessionNumber, db }) => {
 
   let lastExecutedSession = 0
   try {
-    lastExecutedSession = Number(await db.get(DB_KEY))
+    lastExecutedSession = Number(await db.get(LAST_EXECUTED_SESSION))
   } catch (err) {
     if (err.type !== 'NotFoundError') throw new Error(err)
   }
@@ -32,7 +32,7 @@ module.exports = async ({ governor, currentSessionNumber, db }) => {
   console.info('Approved List ID', listID.toNumber())
   await governor.executeTransactionList(listID, 0, 0)
 
-  await db.put(DB_KEY, JSON.stringify(sessionToExecute))
+  await db.put(LAST_EXECUTED_SESSION, JSON.stringify(sessionToExecute))
   console.info('Done executing approved transactions.')
   console.info('')
 }

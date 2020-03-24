@@ -1,15 +1,15 @@
 const express = require('express')
 const cors = require('cors')
-const { NO_LIST_SUBMITTED: DB_KEY } = require('../utils/db-keys')
+const { NO_LIST_SUBMITTED } = require('../utils/db-keys')
 
 const router = express.Router()
 
 const buildRouter = db => {
   router.post('/disarm', cors(), async (_, res) => {
     try {
-      const savedState = JSON.parse(await db.get(DB_KEY))
+      const savedState = JSON.parse(await db.get(NO_LIST_SUBMITTED))
       savedState.disarmed = true
-      await db.put(DB_KEY, JSON.stringify(savedState))
+      await db.put(NO_LIST_SUBMITTED, JSON.stringify(savedState))
       res.status(200).send({
         message: `Alarm disarmed for this period.`,
         status: 'success'

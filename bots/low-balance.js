@@ -5,7 +5,7 @@ const {
 } = require('ethers')
 
 const alarm = require('../utils/alarm')
-const { NO_LIST_SUBMITTED: DB_KEY } = require('../utils/db-keys')
+const { LOW_BALANCE } = require('../utils/db-keys')
 
 module.exports = async ({ signer, signerAddress, chainName, chainId, db }) => {
   let balance
@@ -27,7 +27,7 @@ module.exports = async ({ signer, signerAddress, chainName, chainId, db }) => {
   // Did 48 hours pass since the last alarm?
   let lastAlarmTime = 0
   try {
-    lastAlarmTime = await db.get(DB_KEY)
+    lastAlarmTime = await db.get(LOW_BALANCE)
   } catch (err) {
     if (err.type !== 'NotFoundError') throw new Error(err)
   }
@@ -35,7 +35,15 @@ module.exports = async ({ signer, signerAddress, chainName, chainId, db }) => {
   const nowHours = Date.now() / 1000 / 60 / 60
   if (nowHours - lastAlarmTime < 24 * 3) return
 
-  await db.put(DB_KEY, JSON.stringify(nowHours))
+  console.info('Wallet balance is below threshold.')
+  console.info(
+    'Balance threshold:',
+    process.env.process.env.BALANCE_THRESHOLD_ETH
+  )
+  console.info('Last alarm time:', new Date(lastAlarmTime * 60 * 60 * 1000))
+  console.info('')
+
+  await db.put(LOW_BALANCE, JSON.stringify(nowHours))
   alarm({
     subject: 'Governor warning: Bot is running low on ETH',
     message: `the governor bot wallet at ${signerAddress} is running low on ETH.\nIf it runs out of ETH it will no longe be able to executeSubmissions and pass periods.\n\n Balance when this email was dispatched: ${formatEther(

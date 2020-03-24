@@ -1,5 +1,5 @@
 const alarm = require('../utils/alarm')
-const { NO_LIST_SUBMITTED: DB_KEY } = require('../utils/db-keys')
+const { NO_LIST_SUBMITTED } = require('../utils/db-keys')
 
 module.exports = async ({
   governor,
@@ -19,7 +19,7 @@ module.exports = async ({
   }
 
   try {
-    const savedState = JSON.parse(await db.get(DB_KEY))
+    const savedState = JSON.parse(await db.get(NO_LIST_SUBMITTED))
 
     // Check if we already sent at least one alarm for this session.
     // If so, load the state from the DB to check if we should send another one.
@@ -67,7 +67,7 @@ module.exports = async ({
       chainId
     })
     await db.put(
-      DB_KEY,
+      NO_LIST_SUBMITTED,
       JSON.stringify({
         lastAlarmTime: timestamp,
         notificationCount: notificationCount + 1,
@@ -105,7 +105,7 @@ module.exports = async ({
       chainId
     })
     await db.put(
-      DB_KEY,
+      NO_LIST_SUBMITTED,
       JSON.stringify({
         lastAlarmTime: timestamp,
         notificationCount: notificationCount + 1,
