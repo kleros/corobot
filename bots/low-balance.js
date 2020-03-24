@@ -66,13 +66,13 @@ module.exports = async ({
     <br>
     <br>If the wallet has less then ${formatEther(
       submissionDeposit
-    )} but more than zero, it will still be able to pass periods an execute approved transactions, however it will not be able to submit a list, in the case of an emergency.
+    )} Ξ it might still be able to pass periods an execute approved transactions, however it will not be able to submit a list, in the case of an emergency.
     <br>
     <br>If the wallet reaches zero, it will also not be able to pass periods or execute transactions.
     <br>
     <br>Please fund it.
     <br>
-    <br> Balance when this email was dispatched: ${formatEther(balance)} Ξ.`,
+    <br>Balance when this email was dispatched: ${formatEther(balance)} Ξ.`,
     chainName,
     chainId
   })
