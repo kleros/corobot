@@ -39,14 +39,16 @@ const runBots = async () => {
     submissionTimeout,
     signerAddress,
     currentSessionNumber,
-    network
+    network,
+    submissionDeposit
   ] = await Promise.all([
     governor.lastApprovalTime(),
     provider.getBlock('latest'),
     governor.submissionTimeout(),
     signer.getAddress(),
     governor.getCurrentSessionNumber(),
-    provider.getNetwork()
+    provider.getNetwork(),
+    governor.submissionDeposit()
   ])
   console.info('Bot wallet:', signerAddress)
   const { timestamp } = latestBlock
@@ -63,7 +65,8 @@ const runBots = async () => {
       governor,
       chainId,
       chainName,
-      db
+      db,
+      submissionDeposit
     })
   )
 }

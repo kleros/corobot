@@ -16,7 +16,8 @@ module.exports = async ({
   submissionTimeout,
   currentSessionNumber,
   db,
-  signerAddress
+  signerAddress,
+  submissionDeposit
 }) => {
   // Check if someone disarmed the alarm for this session
   let disarmed
@@ -48,12 +49,10 @@ module.exports = async ({
   console.info('Within list submission period')
 
   let submittedListIndexes
-  let submissionDeposit
   try {
-    ;[submittedListIndexes, submissionDeposit] = await Promise.all([
-      governor.getSubmittedLists(currentSessionNumber),
-      governor.submissionDeposit()
-    ])
+    submittedListIndexes = await governor.getSubmittedLists(
+      currentSessionNumber
+    )
   } catch (err) {
     console.error(`Error getting submitted lists or submission deposit value.`)
     throw err
