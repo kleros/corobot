@@ -1,6 +1,14 @@
+const ethers = require('ethers')
+
 const alarm = require('../utils/alarm')
 const { NO_LIST_SUBMITTED } = require('../utils/db-keys')
 
+// Used to ensure addresses are in checksummed format.
+const { getAddress } = ethers.utils
+
+// Sends an email to every WATCHER if we passed
+// the alarm threshold for this session and none of
+// the SUBMITTER_ADDRESSES submitted a list.
 module.exports = async ({
   governor,
   lastApprovalTime,
@@ -23,10 +31,7 @@ module.exports = async ({
 
     // Check if we already sent at least one alarm for this session.
     // If so, load the state from the DB to check if we should send another one.
-    if (
-      Number(savedState.currentSessionNumber) ===
-      state.currentSessionNumber - 1
-    )
+    if (Number(savedState.currentSessionNumber) === state.currentSessionNumber)
       state = savedState
   } catch (err) {
     if (err.type !== 'NotFoundError') throw new Error(err)
@@ -92,11 +97,13 @@ module.exports = async ({
     throw err
   }
 
-  const submitterAddresses = JSON.parse(process.env.SUBMITTER_ADDRESSES)
+  const submitterAddresses = JSON.parse(
+    process.env.SUBMITTER_ADDRESSES
+  ).map(submitter => getAddress(submitter))
   if (
     !submittedLists
-      .map(({ submitter }) => submitter)
-      .some(submitter => submitterAddresses.includes(submitter))
+      .map(({ submitter }) => getAddress(submitter))
+      .some(submitter => submitterAddresses.includes(getAddress(submitter)))
   ) {
     await alarm({
       subject: `Governor Warning: Someone submitted a list to governor but none of the team members did.`,
