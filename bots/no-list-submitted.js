@@ -55,6 +55,8 @@ module.exports = async ({
 
   if (timestamp < nextAlarmThreshold) return // Did not reach threshold yet.
 
+  if (timestamp > lastAlarmTime.add(submissionTimeout).toNumber()) return // Submission period is over
+
   // Did anyone submit a list before the alarm thershold?
   let submittedListIndexes
   try {
