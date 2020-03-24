@@ -15,7 +15,8 @@ module.exports = async ({
   lastApprovalTime,
   submissionTimeout,
   currentSessionNumber,
-  db
+  db,
+  signerAddress
 }) => {
   // Check if someone disarmed the alarm for this session
   let disarmed
@@ -76,6 +77,7 @@ module.exports = async ({
   const submitterAddresses = JSON.parse(
     process.env.SUBMITTER_ADDRESSES
   ).map(submitter => getAddress(submitter))
+  submitterAddresses.push(signerAddress)
 
   if (
     submittedLists

@@ -17,6 +17,7 @@ module.exports = async ({
   chainName,
   submissionTimeout,
   chainId,
+  signerAddress,
   db
 }) => {
   let state = {
@@ -103,6 +104,8 @@ module.exports = async ({
   const submitterAddresses = JSON.parse(
     process.env.SUBMITTER_ADDRESSES
   ).map(submitter => getAddress(submitter))
+  submitterAddresses.push(signerAddress)
+
   if (
     !submittedLists
       .map(({ submitter }) => getAddress(submitter))
