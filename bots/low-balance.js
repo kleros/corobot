@@ -7,6 +7,8 @@ const {
 const alarm = require('../utils/alarm')
 const { LOW_BALANCE } = require('../utils/db-keys')
 
+// Sends out email to WATCHERS, if the bot wallet has less than
+// BALANCE_THRESHOLD_ETH ETH.
 module.exports = async ({ signer, signerAddress, chainName, chainId, db }) => {
   let balance
   try {
@@ -36,9 +38,8 @@ module.exports = async ({ signer, signerAddress, chainName, chainId, db }) => {
   if (nowHours - lastAlarmTime < 24 * 3) return
 
   console.info('Wallet balance is below threshold.')
-  console.info('Balance threshold:', process.env.BALANCE_THRESHOLD_ETH)
+  console.info('Balance threshold:', process.env.BALANCE_THRESHOLD_ETH, 'ETH')
   console.info('Last alarm time:', new Date(lastAlarmTime * 60 * 60 * 1000))
-  console.info('')
 
   await db.put(LOW_BALANCE, JSON.stringify(nowHours))
   alarm({

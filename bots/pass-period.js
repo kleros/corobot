@@ -2,6 +2,8 @@ const ethers = require('ethers')
 
 const { bigNumberify } = ethers.utils
 
+// If the session is over, calls executeSubmissions to start
+// a new session.
 module.exports = async ({
   governor,
   lastApprovalTime,

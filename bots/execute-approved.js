@@ -1,5 +1,6 @@
 const { LAST_EXECUTED_SESSION } = require('../utils/db-keys')
 
+// Executes transactions approved in the last session, if any.
 module.exports = async ({ governor, currentSessionNumber, db }) => {
   const sessionToExecute = currentSessionNumber.toNumber() - 1
   if (sessionToExecute <= 0) return // We are in the very first session. Nothing to execute yet.
@@ -34,5 +35,4 @@ module.exports = async ({ governor, currentSessionNumber, db }) => {
 
   await db.put(LAST_EXECUTED_SESSION, JSON.stringify(sessionToExecute))
   console.info('Done executing approved transactions.')
-  console.info('')
 }
