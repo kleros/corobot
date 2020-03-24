@@ -35,16 +35,18 @@ module.exports = async ({ signer, signerAddress, chainName, chainId, db }) => {
   }
 
   const nowHours = Date.now() / 1000 / 60 / 60
-  if (nowHours - lastAlarmTime < 24 * 3) return
+  const period = process.env.BALANCE_ALARM_PERIOD_HOURS
+    ? Number(process.env.BALANCE_ALARM_PERIOD_HOURS)
+    : 24 * 3
+  if (nowHours - lastAlarmTime < period) return
 
   console.info('Wallet balance is below threshold.')
   console.info('Balance threshold:', process.env.BALANCE_THRESHOLD_ETH, 'ETH')
-  console.info('Last alarm time:', new Date(lastAlarmTime * 60 * 60 * 1000))
 
   await db.put(LOW_BALANCE, JSON.stringify(nowHours))
   alarm({
     subject: 'Governor warning: Bot is running low on ETH',
-    message: `the governor bot wallet at ${signerAddress} is running low on ETH.\nIf it runs out of ETH it will no longe be able to executeSubmissions and pass periods.\n\n Balance when this email was dispatched: ${formatEther(
+    message: `the governor bot wallet at ${signerAddress} is running low on ETH.\nIf it runs out of ETH it will no longer be able to executeSubmissions and pass periods.\n\n Balance when this email was dispatched: ${formatEther(
       balance
     )} Ξ.`,
     chainName,
