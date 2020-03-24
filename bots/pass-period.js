@@ -1,4 +1,5 @@
 const ethers = require('ethers')
+const { NO_LIST_SUBMITTED } = require('../utils/db-keys')
 
 const { bigNumberify } = ethers.utils
 
@@ -8,7 +9,9 @@ module.exports = async ({
   governor,
   lastApprovalTime,
   submissionTimeout,
-  timestamp
+  currentSessionNumber,
+  timestamp,
+  db
 }) => {
   // Are we in the approval period?
   if (
@@ -19,6 +22,15 @@ module.exports = async ({
     console.info('In approval period, calling executeSubmissions...')
     try {
       await governor.executeSubmissions()
+      await db.put(
+        NO_LIST_SUBMITTED,
+        JSON.stringify({
+          lastAlarmTime: 0,
+          notificationCount: 0,
+          currentSessionNumber: currentSessionNumber.toNumber() + 1,
+          disarmed: false
+        })
+      )
     } catch (err) {
       console.error('Error executing submissions')
       console.error(err)
