@@ -73,7 +73,7 @@ module.exports = async ({
   if (submittedListIndexes.length === 0) {
     await alarm({
       subject: `Governor Warning: No one submitted a list for this session.`,
-      message: `no one made any submissions in the current session. \n Please visit ${process.env.GOVERNOR_URL} and submit a list ASAP!`,
+      message: `no one made any submissions in the current session.<br><br>Please visit ${process.env.GOVERNOR_URL} and submit a list ASAP!`,
       chainName,
       chainId,
       secondary: `To disable the alarm for this section, click <a href=${process.env.BOT_URL}>here</a>`
@@ -116,7 +116,13 @@ module.exports = async ({
   ) {
     await alarm({
       subject: `Governor Warning: Someone submitted a list to governor but none of the team members did.`,
-      message: `no submissions were made by the whitelisted addresses in the current session, but another address submitted a list. \n Please visit ${process.env.GOVERNOR_URL}, check the submission and if needed, submit a list ASAP!`,
+      message: `no submissions were made by the whitelisted addresses in the current session, but another someone else did.
+      <br>
+      <br>Please visit <a href="${process.env.GOVERNOR_URL}">the governor UI</a> to check the submission.
+      <br>
+      <br>If the team thinks the submission is OK, one of the whitelisted addresses can disarm the alarm by visiting the UI <a href="${process.env.BOT_URL}">here</a>.
+      <br>
+      <br>If the submission is not ok, please submit a list (from one of the whitelisted addresses) to generate a dispute.`,
       chainName,
       chainId,
       secondary: `To disable the alarm for this section, click <a href="${process.env.BOT_URL}">here</a>`
