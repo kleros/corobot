@@ -10,9 +10,12 @@ if (!process.env.PROVIDER_URL) {
   process.exit(1)
 }
 
-if (!process.env.GOVERNOR_ADDRESS) {
+if (
+  !process.env.GOVERNOR_ADDRESS ||
+  !getAddress(process.env.GOVERNOR_ADDRESS)
+) {
   console.error(
-    'Governor address not set. Please set the GOVERNOR_ADDRESS environment variable.'
+    'Governor address not set or incorrect. Please set the GOVERNOR_ADDRESS environment variable.'
   )
   process.exit(1)
 }
@@ -95,6 +98,16 @@ if (!process.env.BOT_URL) {
 if (!process.env.WATCHERS) {
   console.error(
     'Watchers object not set. Please set the WATCHERS environment variable.'
+  )
+  process.exit(1)
+}
+
+if (
+  typeof JSON.parse(process.env.WATCHERS) !== 'object' ||
+  JSON.parse(process.env.WATCHERS) === null
+) {
+  console.error(
+    'Watchers should be an object mapping emails to nicknames. Please set the WATCHERS environment variable.'
   )
   process.exit(1)
 }
