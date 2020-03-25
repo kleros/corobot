@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "description": "A disarm request",
+  "type": "object",
+  "required": ["signerAddr", "signature"],
+  "properties": {
+    "signerAddr": {
+      "type": "string",
+      "minLength": 42,
+      "maxLength": 42
+    },
+    "signature": {
+      "type": "string",
+      "minLength": 132,
+      "maxLength": 132
+    }
+  }
+}

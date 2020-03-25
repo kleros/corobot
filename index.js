@@ -7,6 +7,7 @@ const level = require('level')
 const express = require('express')
 const logger = require('morgan')
 const cors = require('cors')
+const bodyParser = require('body-parser')
 const _KlerosGovernor = require('@kleros/kleros/build/contracts/KlerosGovernor.json')
 
 const bots = [
@@ -110,6 +111,7 @@ const app = express()
 app.use('*', cors())
 app.options('*', cors())
 app.use(logger('dev'))
+app.use(bodyParser.json())
 app.use('/api', router)
 app.use(express.static(`${__dirname}/public/`))
 

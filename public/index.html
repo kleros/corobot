@@ -41,17 +41,18 @@
 </head>
 
 <body class="text-center">
-  <form class="form-signin">
+  <form class="form-signin" style="max-width: 440px">
     <img class="mb-4" src="styles/kleros-symbol.png" style="object-fit: contain;" alt="" width="72" height="72">
     <h1 class="h3 mb-3 font-weight-normal">All systems go.</h1>
     <br />
     <button onclick="disarm()" class="btn btn-lg btn-primary btn-block" type="button">Disarm This Session</button>
+    <p id="lbl-response" class="mt-5 mb-3 text-muted" style="font-size: small; text-align: center; font-weight: bold;"></p>
     <a href="https://governor.kleros.io">
       <p class="mt-5 mb-3 text-muted">governor.kleros.io</p>
     </a>
-    <h4 id="lbl-response" class="h5 mb-5 font-weight-normal"></h4>
   </form>
 
+  <script src="ethers.min.js"></script>
   <script src="index.js"></script>
 
 </body>
