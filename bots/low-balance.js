@@ -20,7 +20,7 @@ module.exports = async ({
   let balance
   try {
     balance = await signer.getBalance()
-    console.info('Wallet balance:', formatEther(balance))
+    console.info('Balance:', formatEther(balance), 'Ξ')
   } catch (err) {
     console.error('Error fetching signer balance.')
     throw err
