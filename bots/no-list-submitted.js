@@ -89,7 +89,7 @@ module.exports = async ({
       )}`,
       chainName,
       chainId,
-      secondary: `To disable the alarm for this section, click <a href=${process.env.BOT_URL}>here</a>`
+      secondary: `To disable the alarm for this section, click <a href="${process.env.BOT_URL}">here</a>`
     })
     await db.put(
       NO_LIST_SUBMITTED,
