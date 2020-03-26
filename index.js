@@ -68,7 +68,8 @@ const runBots = async () => {
       chainId,
       chainName,
       db,
-      submissionDeposit
+      submissionDeposit,
+      provider
     })
   )
 }

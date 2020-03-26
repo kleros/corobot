@@ -18,7 +18,7 @@ module.exports = async ({
   db,
   signerAddress,
   submissionDeposit,
-  signer
+  provider
 }) => {
   // Check if someone disarmed the alarm for this session
   let disarmed
@@ -93,7 +93,7 @@ module.exports = async ({
   )
   console.info('Submitting empty list...')
 
-  const suggestedGasPrice = await signer.getGasPrice()
+  const suggestedGasPrice = await provider.getGasPrice()
   await governor.submitList([], [], [], [], '', {
     value: submissionDeposit,
     gasPrice: bigNumberify(suggestedGasPrice).mul(bigNumberify(2))
