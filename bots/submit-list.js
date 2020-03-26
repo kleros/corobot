@@ -58,7 +58,7 @@ module.exports = async ({
     throw err
   }
 
-  // Check if one of the whitelisted addresses submitted a list.
+  // Check if one of the submitters sent a list.
   let submittedLists
   try {
     submittedLists = await Promise.all(
@@ -83,7 +83,7 @@ module.exports = async ({
       .map(({ submitter }) => getAddress(submitter))
       .some(submitter => submitterAddresses.includes(submitter))
   ) {
-    console.info('One of the whitelisted addresses submitted a list.')
+    console.info('One of the submitters made a submission.')
     return
   }
 

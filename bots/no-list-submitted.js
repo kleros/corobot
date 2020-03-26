@@ -70,10 +70,23 @@ module.exports = async ({
     throw err
   }
 
+  const submitterAddresses = JSON.parse(
+    process.env.SUBMITTER_ADDRESSES
+  ).map(submitter => getAddress(submitter))
+  submitterAddresses.push(signerAddress)
+
   if (submittedListIndexes.length === 0) {
     await alarm({
-      subject: `Governor Warning: No one submitted a list for this session.`,
-      message: `no one made any submissions in the current session.<br><br>Please visit ${process.env.GOVERNOR_URL} and submit a list ASAP!`,
+      subject: `Governor Warning: None of the submitters made a submission in this session.`,
+      message: `no one made any submissions in the current session.
+      <br>
+      <br>Please visit ${process.env.GOVERNOR_URL} and submit a list ASAP!
+      <br>
+      <br>The bot will continue issuing warning emails until one of the submitters either submits or disarms the alarm for this session.
+      <br>
+      <br>The submitters are:${submitterAddresses.map(
+        submitterAddress => `<br>${submitterAddress}`
+      )}`,
       chainName,
       chainId,
       secondary: `To disable the alarm for this section, click <a href=${process.env.BOT_URL}>here</a>`
@@ -104,11 +117,6 @@ module.exports = async ({
     throw err
   }
 
-  const submitterAddresses = JSON.parse(
-    process.env.SUBMITTER_ADDRESSES
-  ).map(submitter => getAddress(submitter))
-  submitterAddresses.push(signerAddress)
-
   if (
     !submittedLists
       .map(({ submitter }) => getAddress(submitter))
@@ -116,13 +124,23 @@ module.exports = async ({
   ) {
     await alarm({
       subject: `Governor Warning: Someone submitted a list to governor but none of the team members did.`,
-      message: `no submissions were made by the whitelisted addresses in the current session, but another someone else did.
+      message: `no submissions were made by the submitters in the current session, but another someone else did.
       <br>
-      <br>Please visit <a href="${process.env.GOVERNOR_URL}">the governor UI</a> to check the submission.
+      <br>Please visit <a href="${
+        process.env.GOVERNOR_URL
+      }">the governor UI</a> to check the submission:
       <br>
-      <br>If the team thinks the submission is OK, one of the whitelisted addresses can disarm the alarm by visiting the UI <a href="${process.env.BOT_URL}">here</a>.
+      <br>- If the team thinks the submission is OK, one of the submitters can disarm the alarm by visiting the UI <a href="${
+        process.env.BOT_URL
+      }">here</a>.
       <br>
-      <br>If the submission is not ok, please submit a list (from one of the whitelisted addresses) to generate a dispute.`,
+      <br>- If the submission is not ok, please submit a list (from one of the submitter addresses) to generate a dispute.
+      <br>
+      <br>The bot will continue issuing warning emails until one of the submitters either submits a list or disarms the alarm for this session.
+      <br>
+      <br>The submitters are:${submitterAddresses.map(
+        submitterAddress => `<br>${submitterAddress}`
+      )}`,
       chainName,
       chainId,
       secondary: `To disable the alarm for this section, click <a href="${process.env.BOT_URL}">here</a>`
