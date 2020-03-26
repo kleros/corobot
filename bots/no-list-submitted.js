@@ -82,7 +82,7 @@ module.exports = async ({
       <br>
       <br>Please visit ${process.env.GOVERNOR_URL} and submit a list ASAP!
       <br>
-      <br>The bot will continue issuing warning emails until one of the submitters either submits or disarms the alarm for this session.
+      <br>The bot will continue issuing warning emails until one of the submitters either submit a list or disarms the alarm for this session.
       <br>
       <br>The submitters are:${submitterAddresses.map(
         submitterAddress => `<br>${submitterAddress}`
@@ -136,7 +136,7 @@ module.exports = async ({
       <br>
       <br>- If the submission is not ok, please submit a list (from one of the submitter addresses) to generate a dispute.
       <br>
-      <br>The bot will continue issuing warning emails until one of the submitters either submits a list or disarms the alarm for this session.
+      <br>The bot will continue issuing warning emails until one of the submitters either submit a list or disarms the alarm for this session.
       <br>
       <br>The submitters are:${submitterAddresses.map(
         submitterAddress => `<br>${submitterAddress}`
