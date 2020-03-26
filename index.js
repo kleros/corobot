@@ -51,10 +51,10 @@ const runBots = async () => {
     provider.getNetwork(),
     governor.submissionDeposit()
   ])
-  console.info('Bot wallet:', signerAddress)
-  console.info('Network   :', network.chainName)
   const { timestamp } = latestBlock
   const { name: chainName, chainId } = network
+  console.info('Bot wallet:', signerAddress)
+  console.info('Network   :', chainName)
 
   bots.forEach(bot =>
     bot({
