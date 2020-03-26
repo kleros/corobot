@@ -2,7 +2,7 @@ const ethers = require('ethers')
 const { NO_LIST_SUBMITTED } = require('../utils/db-keys')
 
 // Used to ensure addresses are in checksummed format.
-const { getAddress } = ethers.utils
+const { getAddress, bigNumberify } = ethers.utils
 
 // Submits an empty list of transactions if all conditions
 // below are met:
@@ -17,7 +17,8 @@ module.exports = async ({
   currentSessionNumber,
   db,
   signerAddress,
-  submissionDeposit
+  submissionDeposit,
+  signer
 }) => {
   // Check if someone disarmed the alarm for this session
   let disarmed
@@ -92,8 +93,10 @@ module.exports = async ({
   )
   console.info('Submitting empty list...')
 
+  const suggestedGasPrice = await signer.getGasPrice()
   await governor.submitList([], [], [], [], '', {
-    value: submissionDeposit
+    value: submissionDeposit,
+    gasPrice: bigNumberify(suggestedGasPrice).mul(bigNumberify(2))
   })
 
   console.info('Done submitting list.')
