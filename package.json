@@ -5,6 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon -r dotenv/config index.js",
+    "lint:js": "eslint '**/*.js' --ignore-pattern 'public/ethers.min.js'",
+    "lint:secrets": "secretlint \"**/*\"",
+    "lint": "yarn lint:js && yarn lint:secrets",
     "format": "eslint '**/*.js' --ignore-pattern 'public/ethers.min.js' --fix",
     "clean": "rimraf ./db/* && nodetouch ./db/.gitkeep",
     "release": "standard-version"
@@ -32,6 +35,8 @@
   "devDependencies": {
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-conventional": "^8.3.4",
+    "@secretlint/secretlint-rule-preset-recommend": "^1.0.1",
+    "@secretlint/secretlint-rule-secp256k1-privatekey": "^1.0.1",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.0",
     "eslint-config-prettier-standard": "^3.0.1",
@@ -47,6 +52,7 @@
     "prettier": "^1.19.1",
     "prettier-config-standard": "^1.0.1",
     "rimraf": "^3.0.2",
+    "secretlint": "^1.0.1",
     "standard-version": "^7.1.0",
     "touch": "^3.1.0"
   },
@@ -66,7 +72,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn format",
+      "pre-commit": "yarn lint:js && yarn lint:secrets",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   }
