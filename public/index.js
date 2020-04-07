@@ -4,12 +4,15 @@
  * Disarms the alarm for the current session.
  */
 async function disarm() {
-  const { ethers, ethereum } = window
-  const provider = new ethers.providers.Web3Provider(web3.currentProvider)
-  const signer = provider.getSigner()
-
   let response
   try {
+    const { ethers, ethereum, web3 } = window
+    if (!ethereum || !web3)
+      throw new Error('No web3 detected. A web3 browser is required.')
+
+    const provider = new ethers.providers.Web3Provider(web3.currentProvider)
+    const signer = provider.getSigner()
+
     await ethereum.enable()
     const signerAddr = await signer.getAddress()
     const message = `Kleros Alarm Auth: My address is ${signerAddr}.`
