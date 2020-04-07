@@ -55,7 +55,7 @@ module.exports = async ({
       <br>
       <br>Please visit <a href="${
         process.env.GOVERNOR_URL
-      }">the governor UI</a> to submit a list.
+      }">the governor UI</a> to submit a list if no one did it yet.
       <br>
       <br>The submitters are:${submitterAddresses.map(
         submitterAddress => `<br>${submitterAddress}`
