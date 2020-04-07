@@ -74,6 +74,7 @@ module.exports = async ({
     <br>
     <br>Balance when this email was dispatched: ${formatEther(balance)} Ξ.`,
     chainName,
-    chainId
+    chainId,
+    templateId: process.env.WARNING_TEMPLATE_ID
   })
 }

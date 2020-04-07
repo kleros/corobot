@@ -1,10 +1,11 @@
 const ethers = require('ethers')
 const { NO_LIST_SUBMITTED } = require('../utils/db-keys')
+const alarm = require('../utils/alarm')
 const {
   STATUS: { NO_DISPUTE }
 } = require('../utils/enums')
 
-const { bigNumberify } = ethers.utils
+const { bigNumberify, getAddress } = ethers.utils
 
 // If the session is over, calls executeSubmissions to start
 // a new session.
@@ -14,7 +15,10 @@ module.exports = async ({
   submissionTimeout,
   currentSessionNumber,
   timestamp,
-  db
+  db,
+  chainName,
+  chainId,
+  signerAddress
 }) => {
   // Are we still in the submission period?
   if (
@@ -40,11 +44,31 @@ module.exports = async ({
         disarmed: false
       })
     )
+    const submitterAddresses = JSON.parse(
+      process.env.SUBMITTER_ADDRESSES
+    ).map(submitter => getAddress(submitter))
+    submitterAddresses.push(signerAddress)
+
+    await alarm({
+      subject: `New Period: Please submit a list.`,
+      message: `A new session started on the Kleros Governor.
+      <br>
+      <br>Please visit <a href="${
+        process.env.GOVERNOR_URL
+      }">the governor UI</a> to submit a list.
+      <br>
+      <br>The submitters are:${submitterAddresses.map(
+        submitterAddress => `<br>${submitterAddress}`
+      )}`,
+      chainName,
+      chainId,
+      secondary: `To disable the alarm for this session, click <a href="${process.env.BOT_URL}">here</a>`,
+      templateId: process.env.REMINDER_TEMPLATE_ID
+    })
+
+    console.info('Done calling executeSubmissions.')
   } catch (err) {
     console.error('Error executing submissions')
     console.error(err)
-    return
   }
-
-  console.info('Done calling executeSubmissions.')
 }

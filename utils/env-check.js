@@ -60,9 +60,16 @@ if (!process.env.SENDGRID_API_KEY) {
   process.exit(1)
 }
 
-if (!process.env.TEMPLATE_ID) {
+if (!process.env.WARNING_TEMPLATE_ID) {
   console.error(
-    'SendGrid template ID not set. Please set the TEMPLATE_ID environment variable.'
+    'SendGrid warning template ID not set. Please set the WARNING_TEMPLATE_ID environment variable.'
+  )
+  process.exit(1)
+}
+
+if (!process.env.REMINDER_TEMPLATE_ID) {
+  console.error(
+    'SendGrid reminder template ID not set. Please set the REMINDER_TEMPLATE_ID environment variable.'
   )
   process.exit(1)
 }

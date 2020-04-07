@@ -89,7 +89,8 @@ module.exports = async ({
       )}`,
       chainName,
       chainId,
-      secondary: `To disable the alarm for this session, click <a href="${process.env.BOT_URL}">here</a>`
+      secondary: `To disable the alarm for this session, click <a href="${process.env.BOT_URL}">here</a>`,
+      templateId: process.env.WARNING_TEMPLATE_ID
     })
     await db.put(
       NO_LIST_SUBMITTED,
@@ -143,7 +144,8 @@ module.exports = async ({
       )}`,
       chainName,
       chainId,
-      secondary: `To disable the alarm for this session, click <a href="${process.env.BOT_URL}">here</a>`
+      secondary: `To disable the alarm for this session, click <a href="${process.env.BOT_URL}">here</a>`,
+      templateId: process.env.WARNING_TEMPLATE_ID
     })
     await db.put(
       NO_LIST_SUBMITTED,

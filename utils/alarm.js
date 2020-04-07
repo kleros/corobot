@@ -8,23 +8,24 @@ module.exports = async ({
   message,
   chainId,
   chainName,
-  secondary
+  secondary,
+  templateId
 }) => {
   const emails = JSON.parse(process.env.WATCHERS)
   console.info('')
-  console.info('Sounding alarms!')
+  console.info('Notifying watchers.')
   console.info('Subject:', subject)
 
   for (const email of Object.keys(emails)) {
     const nickname = emails[email]
-    console.info(`Sending out warning email to ${nickname} at ${email}`)
+    console.info(`Sending out email to ${nickname} at ${email}`)
     sgMail.send({
       to: email,
       from: {
         email: process.env.FROM_ADDRESS,
         name: process.env.FROM_NAME
       },
-      templateId: process.env.TEMPLATE_ID,
+      templateId,
       dynamic_template_data: {
         subject,
         message: `${nickname}, ${message}`,
