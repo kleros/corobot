@@ -20,16 +20,17 @@ module.exports = async ({
   chainId,
   signerAddress
 }) => {
+  const session = await governor.sessions(currentSessionNumber)
+
   // Are we still in the submission period?
   if (
     bigNumberify(timestamp)
       .sub(lastApprovalTime)
-      .lte(submissionTimeout)
+      .lte(submissionTimeout.add(session.durationOffset))
   )
     return
 
   // Submission period is over. Was there a dispute in the last session?
-  const session = await governor.sessions(currentSessionNumber)
   if (session.status !== NO_DISPUTE) return
 
   console.info('In approval period, calling executeSubmissions...')
