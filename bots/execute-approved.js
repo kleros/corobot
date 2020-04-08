@@ -1,7 +1,10 @@
+const ethers = require('ethers')
+
+const { bigNumberify } = ethers.utils
 const { LAST_EXECUTED_SESSION } = require('../utils/db-keys')
 
 // Executes transactions approved in the last session, if any.
-module.exports = async ({ governor, currentSessionNumber, db }) => {
+module.exports = async ({ governor, currentSessionNumber, db, timestamp }) => {
   const sessionToExecute = currentSessionNumber.toNumber() - 1
   if (sessionToExecute <= 0) return // We are in the very first session. Nothing to execute yet.
 
@@ -14,9 +17,12 @@ module.exports = async ({ governor, currentSessionNumber, db }) => {
 
   if (lastExecutedSession === sessionToExecute) return // Already executed transactions from this session.
 
-  const submissionIndexes = await governor.getSubmittedLists(sessionToExecute)
+  const [submissionIndexes, executionTimeout] = await Promise.all([
+    governor.getSubmittedLists(sessionToExecute),
+    governor.executionTimeout()
+  ])
 
-  const approvedSubmission = (
+  const approvedSubmissions = (
     await Promise.all(
       submissionIndexes.map(async listID => ({
         listID,
@@ -25,9 +31,16 @@ module.exports = async ({ governor, currentSessionNumber, db }) => {
     )
   ).filter(a => a.approved)
 
-  if (approvedSubmission.length === 0) return
+  if (approvedSubmissions.length === 0) return // No approved transactions.
 
-  const listID = approvedSubmission[0].listID
+  const { listID, approvalTime } = approvedSubmissions[0]
+
+  if (
+    bigNumberify(timestamp)
+      .sub(approvalTime)
+      .lte(executionTimeout)
+  )
+    return // Time to execute transactions has passed.
 
   console.info('Executing approved transactions for session', sessionToExecute)
   console.info('Approved List ID', listID.toNumber())
