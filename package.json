@@ -4,7 +4,10 @@
   "description": "A bot to watch and respond to kleros governor events.",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon -r dotenv/config index.js",
+    "start:debug": "node --inspect=5858 -r ts-node/register ./src/index.ts",
+    "start": "nodemon --exec yarn start:debug",
+    "production": "yarn build && node dist/index.js",
+    "build": "rimraf dist && tsc -p .",
     "lint:js": "eslint '**/*.js' --ignore-pattern 'public/ethers.min.js'",
     "lint:secrets": "secretlint \"**/*\"",
     "lint": "yarn lint:js && yarn lint:secrets",
@@ -54,7 +57,9 @@
     "rimraf": "^3.0.2",
     "secretlint": "^1.0.1",
     "standard-version": "^7.1.0",
-    "touch": "^3.1.0"
+    "touch": "^3.1.0",
+    "ts-node": "^8.8.2",
+    "typescript": "^3.8.3"
   },
   "standard": {
     "parser": "babel-eslint",

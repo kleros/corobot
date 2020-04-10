@@ -1,14 +1,19 @@
 // Run env variable checks.
-require('./utils/env-check')
+import * as dotenv from 'dotenv'
 
-const http = require('http')
-const ethers = require('ethers')
-const level = require('level')
-const express = require('express')
-const logger = require('morgan')
-const cors = require('cors')
-const bodyParser = require('body-parser')
-const _KlerosGovernor = require('@kleros/kleros/build/contracts/KlerosGovernor.json')
+// Load environment variables.
+dotenv.config()
+import './utils/env-check'
+
+import * as http from 'http'
+import * as ethers from 'ethers'
+import * as level from 'level'
+import * as express from 'express'
+import * as logger from 'morgan'
+import * as cors from 'cors'
+import * as bodyParser from 'body-parser'
+import * as _KlerosGovernor from '@kleros/kleros/build/contracts/KlerosGovernor.json'
+import * as path from "path"
 
 const bots = [
   require('./bots/pass-period'),
@@ -114,7 +119,7 @@ app.options('*', cors())
 app.use(logger('dev'))
 app.use(bodyParser.json())
 app.use('/api', router)
-app.use(express.static(`${__dirname}/public/`))
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 /**
  * Event listener for HTTP server "listening" event.
