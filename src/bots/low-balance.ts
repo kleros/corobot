@@ -1,22 +1,29 @@
-const {
-  ethers: {
-    utils: { parseEther, formatEther }
-  }
-} = require('ethers')
+import { ethers, Wallet, Contract } from 'ethers'
+import alarm from '../utils/alarm'
+import { LOW_BALANCE } from '../utils/db-keys'
+import { BigNumber } from 'ethers/utils'
 
-const alarm = require('../utils/alarm')
-const { LOW_BALANCE } = require('../utils/db-keys')
+const { utils: { parseEther, formatEther } } = ethers
+
+interface LowBalanceParams {
+  signer: Wallet,
+  signerAddress: string,
+  chainName: string,
+  chainId: number,
+  db: Level,
+  submissionDeposit: BigNumber,
+}
 
 // Sends out email to WATCHERS, if the bot wallet has less than
 // BALANCE_THRESHOLD_ETH ETH.
-module.exports = async ({
+export default async ({
   signer,
   signerAddress,
   chainName,
   chainId,
   db,
   submissionDeposit
-}) => {
+}: LowBalanceParams) => {
   let balance
   try {
     balance = await signer.getBalance()
@@ -36,7 +43,7 @@ module.exports = async ({
   // Did 48 hours pass since the last alarm?
   let lastAlarmTime = 0
   try {
-    lastAlarmTime = await db.get(LOW_BALANCE)
+    lastAlarmTime = Number(await db.get(LOW_BALANCE))
   } catch (err) {
     if (err.type !== 'NotFoundError') throw new Error(err)
   }

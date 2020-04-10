@@ -1,28 +1,40 @@
 // Run env variable checks.
-require('./utils/env-check')
+import * as dotenv from 'dotenv'
 
-const http = require('http')
-const ethers = require('ethers')
-const level = require('level')
-const express = require('express')
-const logger = require('morgan')
-const cors = require('cors')
-const bodyParser = require('body-parser')
-const _KlerosGovernor = require('@kleros/kleros/build/contracts/KlerosGovernor.json')
+// Load environment variables.
+dotenv.config()
+import './utils/env-check'
 
-const bots = [
-  require('./bots/pass-period'),
-  require('./bots/no-list-submitted'),
-  require('./bots/low-balance'),
-  require('./bots/execute-approved'),
-  require('./bots/submit-list')
+import * as http from 'http'
+import * as ethers from 'ethers'
+import * as level from 'level'
+import * as express from 'express'
+import * as logger from 'morgan'
+import * as cors from 'cors'
+import * as bodyParser from 'body-parser'
+import * as _KlerosGovernor from '@kleros/kleros/build/contracts/KlerosGovernor.json'
+import * as path from "path"
+import { AddressInfo } from 'net'
+
+import passPeriod from './bots/pass-period'
+import noListSubmitted from './bots/no-list-submitted'
+import lowBalance from './bots/low-balance'
+import executeApproved from './bots/execute-approved'
+import submitList from './bots/submit-list'
+
+const bots: Function[] = [
+  passPeriod,
+  noListSubmitted,
+  lowBalance,
+  executeApproved,
+  submitList
 ]
 
 // Setup provider contract instance.
 const provider = new ethers.providers.JsonRpcProvider(process.env.PROVIDER_URL)
-const signer = new ethers.Wallet(process.env.WALLET_KEY, provider)
+const signer = new ethers.Wallet(process.env.WALLET_KEY as string, provider)
 const governor = new ethers.Contract(
-  process.env.GOVERNOR_ADDRESS,
+  process.env.GOVERNOR_ADDRESS as string,
   _KlerosGovernor.abi,
   signer
 )
@@ -89,7 +101,7 @@ setInterval(
  * Event listener for HTTP server "error" event.
  * @param {object} error The error object.
  */
-const onError = error => {
+const onError = (error: { syscall: string, code: string }) => {
   if (error.syscall !== 'listen') throw error
 
   const bind = typeof port === 'string' ? `Pipe ${port}` : `Port ${port}`
@@ -107,7 +119,8 @@ const onError = error => {
   }
 }
 
-const router = require('./routes')(db)
+import routerBuilder from './routes'
+const router = routerBuilder(db)
 
 const app = express()
 app.use('*', cors())
@@ -115,13 +128,13 @@ app.options('*', cors())
 app.use(logger('dev'))
 app.use(bodyParser.json())
 app.use('/api', router)
-app.use(express.static(`${__dirname}/public/`))
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 /**
  * Event listener for HTTP server "listening" event.
  */
 const onListening = () => {
-  const addr = server.address()
+  const addr: AddressInfo = server.address() as AddressInfo
   const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr.port}`
   console.info('Listening on', bind)
   console.info('')

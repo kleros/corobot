@@ -53,9 +53,9 @@ The Alarm UI allows the submitters to disarm the alarm for the current session. 
 2.  Duplicate `.env.example`, rename it to `.env` and fill in the environment variables.
 3.  Run `yarn` to install dependencies and then `yarn start` to run the service in development mode.
 
-> To run the service in production mode use `node -r dotenv/config index.js`.
+> To run the service in production mode use `yarn production`.
 
-> To start with PM2 use `pm2 start --node-args="-r dotenv/config" index.js --name corobot`
+> To start with PM2 use `pm2 start yarn --name corobot -- production`
 
 ## Other Scripts
 
