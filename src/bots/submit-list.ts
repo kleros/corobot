@@ -1,8 +1,21 @@
-import { ethers } from 'ethers'
+import { ethers, Contract } from 'ethers'
 import { NO_LIST_SUBMITTED } from '../utils/db-keys'
+import { BigNumber } from 'ethers/utils'
+import { JsonRpcProvider } from 'ethers/providers'
 
 // Used to ensure addresses are in checksummed format.
 const { getAddress, bigNumberify } = ethers.utils
+
+interface SubmitListParams {
+  governor: Contract,
+  lastApprovalTime: BigNumber,
+  submissionTimeout: BigNumber,
+  currentSessionNumber: BigNumber,
+  db: Level,
+  signerAddress: string,
+  submissionDeposit: BigNumber,
+  provider: JsonRpcProvider
+}
 
 // Submits an empty list of transactions if all conditions
 // below are met:
@@ -10,7 +23,7 @@ const { getAddress, bigNumberify } = ethers.utils
 // - The session is not over;
 // - None lists were submitted by SUBMITTER_ADDRESSES;
 // - The alarm is not disarmed for this session.
-module.exports = async ({
+export default async ({
   governor,
   lastApprovalTime,
   submissionTimeout,
@@ -19,7 +32,7 @@ module.exports = async ({
   signerAddress,
   submissionDeposit,
   provider
-}) => {
+}: SubmitListParams) => {
   // Check if someone disarmed the alarm for this session
   let disarmed
   try {

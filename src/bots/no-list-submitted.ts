@@ -1,14 +1,27 @@
-import { ethers } from 'ethers'
+import { ethers, Contract } from 'ethers'
 import alarm from '../utils/alarm'
 import { NO_LIST_SUBMITTED } from '../utils/db-keys'
+import { BigNumber } from 'ethers/utils'
 
 // Used to ensure addresses are in checksummed format.
 const { getAddress } = ethers.utils
 
+interface NoListSubmittedParams {
+  governor: Contract,
+  lastApprovalTime: BigNumber,
+  timestamp: number,
+  currentSessionNumber: BigNumber,
+  chainName: string,
+  submissionTimeout: BigNumber,
+  chainId: number,
+  signerAddress: string,
+  db: Level
+}
+
 // Sends an email to every WATCHER if we passed
 // the alarm threshold for this session and none of
 // the SUBMITTER_ADDRESSES submitted a list.
-module.exports = async ({
+export default async ({
   governor,
   lastApprovalTime,
   timestamp,
@@ -18,7 +31,7 @@ module.exports = async ({
   chainId,
   signerAddress,
   db
-}) => {
+}: NoListSubmittedParams) => {
   let state = {
     lastAlarmTime: 0,
     notificationCount: 0,

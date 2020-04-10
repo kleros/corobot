@@ -1,13 +1,26 @@
-import { ethers } from 'ethers'
+import { ethers, Contract } from 'ethers'
 import { NO_LIST_SUBMITTED } from '../utils/db-keys'
 import alarm from '../utils/alarm'
 import { NO_DISPUTE } from '../utils/enums'
+import { BigNumber } from 'ethers/utils'
 
 const { bigNumberify, getAddress } = ethers.utils
 
+interface PassPeriodParams {
+  governor: Contract,
+  lastApprovalTime: BigNumber,
+  submissionTimeout: BigNumber,
+  currentSessionNumber: BigNumber,
+  timestamp: number,
+  db: Level,
+  chainName: string,
+  chainId: number,
+  signerAddress: string
+}
+
 // If the session is over, calls executeSubmissions to start
 // a new session.
-module.exports = async ({
+export default async ({
   governor,
   lastApprovalTime,
   submissionTimeout,
@@ -17,7 +30,7 @@ module.exports = async ({
   chainName,
   chainId,
   signerAddress
-}) => {
+}: PassPeriodParams) => {
   const session = await governor.sessions(currentSessionNumber)
 
   // Are we still in the submission period?

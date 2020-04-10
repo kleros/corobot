@@ -1,13 +1,14 @@
 {
   "compilerOptions": {
-    "allowJs": true,
-    "target": "es6",
+    "target": "es5",
     "module": "commonjs",
     "outDir": "dist/",
     "sourceMap": true,
+    "allowJs": true,
+    "checkJs": true,
+    "resolveJsonModule": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "resolveJsonModule": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
     "strictNullChecks": true

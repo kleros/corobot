@@ -56,4 +56,4 @@ const buildRouter = (db: Level) => {
   return router
 }
 
-module.exports = buildRouter
+export default buildRouter
