@@ -3,7 +3,7 @@ const sgMail = require('@sendgrid/mail')
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 sgMail.setSubstitutionWrappers('{{', '}}')
 
-module.exports = async ({
+export default async ({
   subject,
   message,
   chainId,
@@ -11,7 +11,7 @@ module.exports = async ({
   secondary,
   templateId
 }) => {
-  const emails = JSON.parse(process.env.WATCHERS)
+  const emails = JSON.parse(process.env.WATCHERS as string)
   console.info('')
   console.info('Notifying watchers.')
   console.info('Subject:', subject)

@@ -1,7 +1,7 @@
-const ethers = require('ethers')
+import * as ethers from 'ethers'
+import { LAST_EXECUTED_SESSION } from '../utils/db-keys'
 
 const { bigNumberify } = ethers.utils
-const { LAST_EXECUTED_SESSION } = require('../utils/db-keys')
 
 // Executes transactions approved in the last session, if any.
 module.exports = async ({ governor, currentSessionNumber, db, timestamp }) => {
@@ -29,7 +29,7 @@ module.exports = async ({ governor, currentSessionNumber, db, timestamp }) => {
         ...(await governor.submissions(listID))
       }))
     )
-  ).filter(a => a.approved)
+  ).filter((a) => a.approved)
 
   if (approvedSubmissions.length === 0) return // No approved transactions.
 

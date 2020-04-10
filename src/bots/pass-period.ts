@@ -1,9 +1,7 @@
-const ethers = require('ethers')
-const { NO_LIST_SUBMITTED } = require('../utils/db-keys')
-const alarm = require('../utils/alarm')
-const {
-  STATUS: { NO_DISPUTE }
-} = require('../utils/enums')
+import { ethers } from 'ethers'
+import { NO_LIST_SUBMITTED } from '../utils/db-keys'
+import alarm from '../utils/alarm'
+import { NO_DISPUTE } from '../utils/enums'
 
 const { bigNumberify, getAddress } = ethers.utils
 
@@ -46,8 +44,8 @@ module.exports = async ({
       })
     )
     const submitterAddresses = JSON.parse(
-      process.env.SUBMITTER_ADDRESSES
-    ).map(submitter => getAddress(submitter))
+      process.env.SUBMITTER_ADDRESSES as string
+    ).map((submitter: string) => getAddress(submitter))
     submitterAddresses.push(signerAddress)
 
     await alarm({
@@ -59,7 +57,7 @@ module.exports = async ({
       }">the governor UI</a> to submit a list if no one did it yet.
       <br>
       <br>The submitters are:${submitterAddresses.map(
-        submitterAddress => `<br>${submitterAddress}`
+        (submitterAddress: string) => `<br>${submitterAddress}`
       )}`,
       chainName,
       chainId,

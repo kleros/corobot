@@ -1,7 +1,6 @@
-const ethers = require('ethers')
-
-const alarm = require('../utils/alarm')
-const { NO_LIST_SUBMITTED } = require('../utils/db-keys')
+import { ethers } from 'ethers'
+import alarm from '../utils/alarm'
+import { NO_LIST_SUBMITTED } from '../utils/db-keys'
 
 // Used to ensure addresses are in checksummed format.
 const { getAddress } = ethers.utils
@@ -71,8 +70,8 @@ module.exports = async ({
   }
 
   const submitterAddresses = JSON.parse(
-    process.env.SUBMITTER_ADDRESSES
-  ).map(submitter => getAddress(submitter))
+    process.env.SUBMITTER_ADDRESSES as string
+  ).map((submitter: string) => getAddress(submitter))
   submitterAddresses.push(signerAddress)
 
   if (submittedListIndexes.length === 0) {
@@ -85,7 +84,7 @@ module.exports = async ({
       <br>The bot will continue issuing warning emails until one of the submitters either submit a list or disarms the alarm for this session.
       <br>
       <br>The submitters are:${submitterAddresses.map(
-        submitterAddress => `<br>${submitterAddress}`
+        (submitterAddress: string) => `<br>${submitterAddress}`
       )}`,
       chainName,
       chainId,
@@ -107,11 +106,11 @@ module.exports = async ({
   let submittedLists
   try {
     submittedLists = await Promise.all(
-      submittedListIndexes.map(i => governor.submissions(i.toString()))
+      submittedListIndexes.map((i: number) => governor.submissions(i.toString()))
     )
   } catch (err) {
     console.error(
-      `Error fetching submissions. Indexes ${submittedListIndexes.map(i =>
+      `Error fetching submissions. Indexes ${submittedListIndexes.map((i: number) =>
         i.toString()
       )}`
     )
@@ -140,7 +139,7 @@ module.exports = async ({
       <br>The bot will continue issuing warning emails until one of the submitters either submit a list or disarms the alarm for this session.
       <br>
       <br>The submitters are:${submitterAddresses.map(
-        submitterAddress => `<br>${submitterAddress}`
+        (submitterAddress: string) => `<br>${submitterAddress}`
       )}`,
       chainName,
       chainId,
