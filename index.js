@@ -13,7 +13,6 @@ const _KlerosGovernor = require('@kleros/kleros/build/contracts/KlerosGovernor.j
 const bots = [
   require('./bots/pass-period'),
   require('./bots/no-list-submitted'),
-  require('./bots/low-balance'),
   require('./bots/execute-approved'),
   require('./bots/submit-list')
 ]
