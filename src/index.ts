@@ -16,26 +16,11 @@ import * as _KlerosGovernor from '@kleros/kleros/build/contracts/KlerosGovernor.
 import * as path from "path"
 import { AddressInfo } from 'net'
 
-<<<<<<< HEAD
 const bots = [
   require('./bots/pass-period'),
   require('./bots/no-list-submitted'),
   require('./bots/execute-approved'),
   require('./bots/submit-list')
-=======
-import passPeriod from './bots/pass-period'
-import noListSubmitted from './bots/no-list-submitted'
-import lowBalance from './bots/low-balance'
-import executeApproved from './bots/execute-approved'
-import submitList from './bots/submit-list'
-
-const bots: Function[] = [
-  passPeriod,
-  noListSubmitted,
-  lowBalance,
-  executeApproved,
-  submitList
->>>>>>> refactor: setup types and debugging wit ts-node-dev
 ]
 
 // Setup provider contract instance.
