@@ -18,14 +18,12 @@ import { AddressInfo } from 'net'
 
 import passPeriod from './bots/pass-period'
 import noListSubmitted from './bots/no-list-submitted'
-import lowBalance from './bots/low-balance'
 import executeApproved from './bots/execute-approved'
 import submitList from './bots/submit-list'
 
 const bots: Function[] = [
   passPeriod,
   noListSubmitted,
-  lowBalance,
   executeApproved,
   submitList
 ]
