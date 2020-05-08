@@ -69,3 +69,6 @@ db/*
 
 # encryption keys
 key/*.pem
+
+# IDE specific code
+.vscode
