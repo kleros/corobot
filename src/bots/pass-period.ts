@@ -1,15 +1,26 @@
-const ethers = require('ethers')
-const { NO_LIST_SUBMITTED } = require('../utils/db-keys')
-const alarm = require('../utils/alarm')
-const {
-  STATUS: { NO_DISPUTE }
-} = require('../utils/enums')
+import { ethers, Contract } from 'ethers'
+import { NO_LIST_SUBMITTED } from '../utils/db-keys'
+import alarm from '../utils/alarm'
+import { NO_DISPUTE } from '../utils/enums'
+import { BigNumber } from 'ethers/utils'
 
 const { bigNumberify, getAddress } = ethers.utils
 
+interface PassPeriodParams {
+  governor: Contract,
+  lastApprovalTime: BigNumber,
+  submissionTimeout: BigNumber,
+  currentSessionNumber: BigNumber,
+  timestamp: number,
+  db: Level,
+  chainName: string,
+  chainId: number,
+  signerAddress: string
+}
+
 // If the session is over, calls executeSubmissions to start
 // a new session.
-module.exports = async ({
+export default async ({
   governor,
   lastApprovalTime,
   submissionTimeout,
@@ -19,17 +30,18 @@ module.exports = async ({
   chainName,
   chainId,
   signerAddress
-}) => {
+}: PassPeriodParams) => {
+  const session = await governor.sessions(currentSessionNumber)
+
   // Are we still in the submission period?
   if (
     bigNumberify(timestamp)
       .sub(lastApprovalTime)
-      .lte(submissionTimeout)
+      .lte(submissionTimeout.add(session.durationOffset))
   )
     return
 
   // Submission period is over. Was there a dispute in the last session?
-  const session = await governor.sessions(currentSessionNumber)
   if (session.status !== NO_DISPUTE) return
 
   console.info('In approval period, calling executeSubmissions...')
@@ -45,8 +57,8 @@ module.exports = async ({
       })
     )
     const submitterAddresses = JSON.parse(
-      process.env.SUBMITTER_ADDRESSES
-    ).map(submitter => getAddress(submitter))
+      process.env.SUBMITTER_ADDRESSES as string
+    ).map((submitter: string) => getAddress(submitter))
     submitterAddresses.push(signerAddress)
 
     await alarm({
@@ -58,7 +70,7 @@ module.exports = async ({
       }">the governor UI</a> to submit a list if no one did it yet.
       <br>
       <br>The submitters are:${submitterAddresses.map(
-        submitterAddress => `<br>${submitterAddress}`
+        (submitterAddress: string) => `<br>${submitterAddress}`
       )}`,
       chainName,
       chainId,

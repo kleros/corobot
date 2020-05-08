@@ -2,9 +2,12 @@
   "name": "corobot",
   "version": "1.1.0",
   "description": "A bot to watch and respond to kleros governor events.",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "start": "nodemon -r dotenv/config index.js",
+    "start": "ts-node-dev src/index.ts",
+    "start:debug": "ts-node-dev --inspect -- src/index.ts",
+    "build": "rimraf dist && tsc",
+    "production": "yarn build && node dist/index.js",
     "lint:js": "eslint '**/*.js' --ignore-pattern 'public/ethers.min.js'",
     "lint:secrets": "secretlint \"**/*\"",
     "lint": "yarn lint:js && yarn lint:secrets",
@@ -23,6 +26,7 @@
   "dependencies": {
     "@kleros/kleros": "^0.1.2",
     "@sendgrid/mail": "^6.5.4",
+    "@types/ajv": "^1.0.0",
     "ajv": "^6.12.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
@@ -35,8 +39,13 @@
   "devDependencies": {
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-conventional": "^8.3.4",
-    "@secretlint/secretlint-rule-preset-recommend": "^1.0.1",
+    "@secretlint/secretlint-rule-preset-recommend": "^2.0.0",
     "@secretlint/secretlint-rule-secp256k1-privatekey": "^1.0.1",
+    "@types/body-parser": "^1.19.0",
+    "@types/cors": "^2.8.6",
+    "@types/express": "^4.17.6",
+    "@types/morgan": "^1.9.0",
+    "@types/node": "^13.11.1",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.0",
     "eslint-config-prettier-standard": "^3.0.1",
@@ -48,13 +57,14 @@
     "eslint-plugin-standard": "^4.0.1",
     "eslint-plugin-unicorn": "^17.2.0",
     "husky": "^4.2.3",
-    "nodemon": "^2.0.2",
     "prettier": "^1.19.1",
     "prettier-config-standard": "^1.0.1",
     "rimraf": "^3.0.2",
-    "secretlint": "^1.0.1",
+    "secretlint": "^2.0.0",
     "standard-version": "^7.1.0",
-    "touch": "^3.1.0"
+    "touch": "^3.1.0",
+    "ts-node-dev": "^1.0.0-pre.44",
+    "typescript": "^3.8.3"
   },
   "standard": {
     "parser": "babel-eslint",
@@ -72,8 +82,9 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn lint:js && yarn lint:secrets",
+      "pre-commit": "yarn lint",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
-  }
+  },
+  "repository": "git@github.com:kleros/corobot.git"
 }

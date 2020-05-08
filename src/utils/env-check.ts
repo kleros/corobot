@@ -1,4 +1,4 @@
-const ethers = require('ethers')
+import { ethers } from 'ethers'
 
 const { getAddress } = ethers.utils
 
