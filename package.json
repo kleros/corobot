@@ -24,6 +24,7 @@
     "bot"
   ],
   "dependencies": {
+    "@kleros/erc-792": "^4.0.0",
     "@kleros/kleros": "^0.1.2",
     "@sendgrid/mail": "^6.5.4",
     "@types/ajv": "^1.0.0",

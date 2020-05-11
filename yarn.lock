@@ -172,6 +172,11 @@
   dependencies:
     find-up "^4.0.0"
 
+"@kleros/erc-792@^4.0.0":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@kleros/erc-792/-/erc-792-4.0.1.tgz#e4c941ecda29e298a68fff88f880c3cdd8273c0c"
+  integrity sha512-nOoifnzSz62jiZ1CtM8NfXD3kb1gdgTWRZ4VoHLREs5HD33vHnmyrO6FgmQQf/aqQJktHXP9cOo3DUFWv1v/Lw==
+
 "@kleros/kleros-interaction@^0.9.0":
   version "0.9.3"
   resolved "https://registry.yarnpkg.com/@kleros/kleros-interaction/-/kleros-interaction-0.9.3.tgz#c75879a835cc2e8885263ced5a5756d4498f0efa"

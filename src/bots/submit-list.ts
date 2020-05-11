@@ -13,8 +13,10 @@ interface SubmitListParams {
   currentSessionNumber: BigNumber,
   db: Level,
   signerAddress: string,
-  submissionDeposit: BigNumber,
-  provider: JsonRpcProvider
+  submissionBaseDeposit: BigNumber,
+  provider: JsonRpcProvider,
+  arbitratorExtraData: string,
+  arbitrator: Contract
 }
 
 // Submits an empty list of transactions if all conditions
@@ -30,8 +32,10 @@ export default async ({
   currentSessionNumber,
   db,
   signerAddress,
-  submissionDeposit,
-  provider
+  submissionBaseDeposit,
+  provider,
+  arbitratorExtraData,
+  arbitrator
 }: SubmitListParams) => {
   // Check if someone disarmed the alarm for this session
   let disarmed
@@ -105,8 +109,9 @@ export default async ({
     'Alarm is not disarmed, submission threshold passed and none of WHITELISTED_ADDRESSES sent a list.'
   )
 
-  const suggestedGasPrice = await provider.getGasPrice()
+  const [suggestedGasPrice, arbitrationCost] = await Promise.all([provider.getGasPrice(), arbitrator.arbitrationCost(arbitratorExtraData)])
   const gasPrice = bigNumberify(suggestedGasPrice).mul(bigNumberify(2))
+  const submissionDeposit = submissionBaseDeposit.add(bigNumberify(arbitrationCost))
 
   console.info('Submitting empty list...')
   await governor.submitList([], [], [], [], '', {

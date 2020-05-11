@@ -13,6 +13,7 @@ import * as logger from 'morgan'
 import * as cors from 'cors'
 import * as bodyParser from 'body-parser'
 import * as _KlerosGovernor from '@kleros/kleros/build/contracts/KlerosGovernor.json'
+import * as _IArbitrator from '@kleros/erc-792/build/contracts/IArbitrator.json'
 import * as path from "path"
 import { AddressInfo } from 'net'
 
@@ -51,7 +52,9 @@ const runBots = async () => {
     signerAddress,
     currentSessionNumber,
     network,
-    submissionDeposit
+    submissionBaseDeposit,
+    arbitratorExtraData,
+    arbitratorAddress
   ] = await Promise.all([
     governor.lastApprovalTime(),
     provider.getBlock('latest'),
@@ -59,8 +62,15 @@ const runBots = async () => {
     signer.getAddress(),
     governor.getCurrentSessionNumber(),
     provider.getNetwork(),
-    governor.submissionBaseDeposit()
+    governor.submissionBaseDeposit(),
+    governor.arbitratorExtraData(),
+    governor.arbitrator()
   ])
+  const arbitrator = new ethers.Contract(
+    arbitratorAddress,
+    _IArbitrator.abi,
+    signer
+  )
   const { timestamp } = latestBlock
   const { name: chainName, chainId } = network
   console.info('Bot wallet:', signerAddress)
@@ -78,8 +88,10 @@ const runBots = async () => {
       chainId,
       chainName,
       db,
-      submissionDeposit,
-      provider
+      submissionBaseDeposit,
+      provider,
+      arbitratorExtraData,
+      arbitrator
     })
   )
 }
