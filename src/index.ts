@@ -18,7 +18,8 @@ import * as path from "path"
 import { AddressInfo } from 'net'
 
 import passPeriod from './bots/pass-period'
-import noListSubmitted from './bots/no-list-submitted'
+import noListSubmitted from './bots/emergency-warn'
+import notifySubmitters from './bots/initial-warn'
 import executeApproved from './bots/execute-approved'
 import submitList from './bots/submit-list'
 
@@ -26,7 +27,8 @@ const bots: Function[] = [
   passPeriod,
   noListSubmitted,
   executeApproved,
-  submitList
+  submitList,
+  notifySubmitters
 ]
 
 // Setup provider contract instance.

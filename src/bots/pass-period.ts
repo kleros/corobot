@@ -56,29 +56,6 @@ export default async ({
         disarmed: false
       })
     )
-    const submitterAddresses = JSON.parse(
-      process.env.WHITELISTED_ADDRESSES as string
-    ).map((submitter: string) => getAddress(submitter))
-    submitterAddresses.push(signerAddress)
-
-    await alarm({
-      emails: JSON.parse(process.env.SUBMITTERS as string),
-      subject: `New Period: Please submit a list.`,
-      message: `A new session started on the Kleros Governor.
-      <br>
-      <br>Please visit <a href="${
-        process.env.GOVERNOR_URL
-      }">the governor UI</a> to submit a list if no one did it yet.
-      <br>
-      <br>The submitters are:${submitterAddresses.map(
-        (submitterAddress: string) => `<br>${submitterAddress}`
-      )}`,
-      chainName,
-      chainId,
-      secondary: `To disable the alarm for this session, click <a href="${process.env.BOT_URL}">here</a>`,
-      templateId: process.env.REMINDER_TEMPLATE_ID
-    })
-
     console.info('Done calling executeSubmissions.')
   } catch (err) {
     console.error('Error executing submissions')

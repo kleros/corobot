@@ -89,7 +89,7 @@ export default async ({
 
   if (submittedListIndexes.length === 0) {
     await alarm({
-      emails: JSON.parse(process.env.SUBMITTERS as string),
+      emails: JSON.parse(process.env.WATCHERS as string),
       subject: `Governor Warning: None of the submitters made a submission in this session.`,
       message: `no one made any submissions in the current session.
       <br>
@@ -137,7 +137,7 @@ export default async ({
       .some(submitter => submitterAddresses.includes(getAddress(submitter)))
   ) {
     await alarm({
-      emails: JSON.parse(process.env.SUBMITTERS as string),
+      emails: JSON.parse(process.env.WATCHERS as string),
       subject: `Governor Warning: Someone submitted a list to governor but none of the team members did.`,
       message: `no submissions were made by the submitters in the current session, but another someone else did.
       <br>

@@ -15,12 +15,12 @@ A Bot to watch for Kleros Governor events and respond with notifications and tra
 
 > Words in ALL_CAPS are environment variables. See [`.env.example`](.env.example) for more information on them.
 
-This software consists of 5 modules that monitor the state of an instance of Kleros Governor:
+This software consists of 6 modules that monitor the state of an instance of Kleros Governor:
 
 ### 1. Execute Approved
 Executes approved transactions in the previous session.
 
-### 2. No List
+### 2. Emergency Alarm
 Monitors submitted lists for the current session. If none of the submitters (WHITELISTED_ADDRESSES) made a submission during the first half of the session, this module will send emails to the watchers (WATCHERS) more and more frequently until either:
 - One of the submitters (WHITELISTED_ADDRESSES) submits a list;
 - One of the submitters (WHITELISTED_ADDRESSES) disarms the alarm.
@@ -39,6 +39,9 @@ If we are approaching the end of the submission period (LIST_SUBMISSION_THRESHOL
 
 ### 5. Alarm UI
 The Alarm UI allows the submitters to disarm the alarm for the current session. A web3 enabled browser is required.
+
+### 6. Submitters Alarm
+This sends out an email requesting that contacts of the SUBMITTERS object submit a list to the governor. It runs once per period.
 
 ## Prerequisites
 
