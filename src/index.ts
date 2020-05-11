@@ -59,7 +59,7 @@ const runBots = async () => {
     signer.getAddress(),
     governor.getCurrentSessionNumber(),
     provider.getNetwork(),
-    governor.submissionDeposit()
+    governor.submissionBaseDeposit()
   ])
   const { timestamp } = latestBlock
   const { name: chainName, chainId } = network
