@@ -104,12 +104,14 @@ export default async ({
   console.info(
     'Alarm is not disarmed, submission threshold passed and none of WHITELISTED_ADDRESSES sent a list.'
   )
-  console.info('Submitting empty list...')
 
   const suggestedGasPrice = await provider.getGasPrice()
+  const gasPrice = bigNumberify(suggestedGasPrice).mul(bigNumberify(2))
+
+  console.info('Submitting empty list...')
   await governor.submitList([], [], [], [], '', {
     value: submissionDeposit,
-    gasPrice: bigNumberify(suggestedGasPrice).mul(bigNumberify(2))
+    gasPrice
   })
 
   console.info('Done submitting list.')

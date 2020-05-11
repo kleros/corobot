@@ -26,7 +26,6 @@ export default async ({ governor, currentSessionNumber, db, timestamp }: Execute
 
   if (lastExecutedSession === sessionToExecute) return // Already executed transactions from this session.
 
-  console.info(governor)
   const [submissionIndexes, executionTimeout] = await Promise.all([
     governor.getSubmittedLists(sessionToExecute),
     governor.executionTimeout()
