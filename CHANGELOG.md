@@ -2,6 +2,37 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/kleros/corobot/compare/v1.1.0...v1.2.0) (2020-05-11)
+
+
+### Features
+
+* add more env variable checks and docs ([2be12a0](https://github.com/kleros/corobot/commit/2be12a0688d49b463416e3961d4df7a07960fd4c))
+* improve mail message, documentation close [#8](https://github.com/kleros/corobot/issues/8) and close [#7](https://github.com/kleros/corobot/issues/7) ([55abbc3](https://github.com/kleros/corobot/commit/55abbc3b3493796b62f4c5239b5863ba66231f44))
+* include more details on the warning message ([35749fa](https://github.com/kleros/corobot/commit/35749fa809a28b3aa22bddd461634056a7c5e717))
+* inform user if no web3 browser was detected ([9e29ca0](https://github.com/kleros/corobot/commit/9e29ca0d5b1c5bd2cd08812976158cf8cce77c4c))
+* notify session started and close [#10](https://github.com/kleros/corobot/issues/10) ([bc41a01](https://github.com/kleros/corobot/commit/bc41a0158af62fb5ec3dc83f1b36f5c0fb13f875))
+* only send emails to submitters on new period ([2210e22](https://github.com/kleros/corobot/commit/2210e22689d218870716b6e69d22b131dbcd6b66))
+* print current network used ([c72e243](https://github.com/kleros/corobot/commit/c72e243a3ffc3bf33dff3e4fbbb3f0699ecff15d))
+* update codebase to typescript and close [#9](https://github.com/kleros/corobot/issues/9) ([#12](https://github.com/kleros/corobot/issues/12)) ([3854c1d](https://github.com/kleros/corobot/commit/3854c1da80db7472a840206211e1222319e29f9b))
+* update to latest governor contract ([e5ba11f](https://github.com/kleros/corobot/commit/e5ba11f6fff04fe61e993628f75ef4b5ea2f4628))
+* use double the suggested gas price ([151ae0d](https://github.com/kleros/corobot/commit/151ae0d0c145a63ccf9d8c729c4b316defb31d5f))
+
+
+### Bug Fixes
+
+* enable wallet before asking for signature ([ac2a648](https://github.com/kleros/corobot/commit/ac2a648b0f90a24a02e12477febc2a591dbfe954))
+* missing arbitration cost on submission deposit ([5745a1a](https://github.com/kleros/corobot/commit/5745a1a2b096c96cb0ceebc6f5e01de9d77a3694))
+* remove IDE specific files ([2b7be40](https://github.com/kleros/corobot/commit/2b7be4014f23f48b99ea25f180f446711f83e68e))
+* remove low balance bot ([ff1c2e2](https://github.com/kleros/corobot/commit/ff1c2e289b8ead4a79dc10fd5f590283032655c2))
+* remove useless logs and env variables ([bb12138](https://github.com/kleros/corobot/commit/bb12138c600cfe4b404ba26af448a33433438a44))
+* signer does not have getGasPrice function ([b0216ee](https://github.com/kleros/corobot/commit/b0216eec9a877f7f3d02271085a41dee31cac596))
+* typo in email message ([8c272ce](https://github.com/kleros/corobot/commit/8c272ce89377c14294548a060df45d74afe5d2ca))
+* typo in email message ([b6e1460](https://github.com/kleros/corobot/commit/b6e14605d4b5d0adc8436fd65d19a7a1145eb995))
+* typo in mail message ([3786b65](https://github.com/kleros/corobot/commit/3786b6596f69d6cf0e2ecdd865e9e45d8e2e63ec))
+* typo in mail text ([9e5da6a](https://github.com/kleros/corobot/commit/9e5da6a5f361a382d0c7285da184bf3f34df3e75))
+* typo in network object ([2935372](https://github.com/kleros/corobot/commit/2935372607dbcba971e85731c924c19737b57eb7))
+
 ## 1.1.0 (2020-03-25)
 
 

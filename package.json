@@ -1,6 +1,6 @@
 {
   "name": "corobot",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "A bot to watch and respond to kleros governor events.",
   "main": "src/index.js",
   "scripts": {
