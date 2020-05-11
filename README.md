@@ -52,7 +52,7 @@ The Alarm UI allows the submitters to disarm the alarm for the current session. 
 
 > To run the service in production mode use `yarn production`.
 
-> To start with PM2 use `pm2 start yarn --name corobot -- production`
+> To start with PM2 use `pm2 start yarn --name corobot --interpreter bash -- production`
 
 ## Other Scripts
 
