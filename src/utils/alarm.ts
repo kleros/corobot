@@ -9,9 +9,9 @@ export default async ({
   chainId,
   chainName,
   secondary,
-  templateId
+  templateId,
+  emails
 }: any) => {
-  const emails = JSON.parse(process.env.WATCHERS as string)
   console.info('')
   console.info('Notifying watchers.')
   console.info('Subject:', subject)

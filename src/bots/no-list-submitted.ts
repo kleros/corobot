@@ -20,7 +20,7 @@ interface NoListSubmittedParams {
 
 // Sends an email to every WATCHER if we passed
 // the alarm threshold for this session and none of
-// the SUBMITTER_ADDRESSES submitted a list.
+// the WHITELISTED_ADDRESSES submitted a list.
 export default async ({
   governor,
   lastApprovalTime,
@@ -83,12 +83,13 @@ export default async ({
   }
 
   const submitterAddresses = JSON.parse(
-    process.env.SUBMITTER_ADDRESSES as string
+    process.env.WHITELISTED_ADDRESSES as string
   ).map((submitter: string) => getAddress(submitter))
   submitterAddresses.push(signerAddress)
 
   if (submittedListIndexes.length === 0) {
     await alarm({
+      emails: JSON.parse(process.env.SUBMITTERS as string),
       subject: `Governor Warning: None of the submitters made a submission in this session.`,
       message: `no one made any submissions in the current session.
       <br>
@@ -115,7 +116,7 @@ export default async ({
     return
   }
 
-  // Is the submitter one of SUBMITTER_ADDRESSES?
+  // Is the submitter one of WHITELISTED_ADDRESSES?
   let submittedLists
   try {
     submittedLists = await Promise.all(
@@ -136,6 +137,7 @@ export default async ({
       .some(submitter => submitterAddresses.includes(getAddress(submitter)))
   ) {
     await alarm({
+      emails: JSON.parse(process.env.SUBMITTERS as string),
       subject: `Governor Warning: Someone submitted a list to governor but none of the team members did.`,
       message: `no submissions were made by the submitters in the current session, but another someone else did.
       <br>

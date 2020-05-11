@@ -21,9 +21,9 @@ This software consists of 5 modules that monitor the state of an instance of Kle
 Executes approved transactions in the previous session.
 
 ### 2. No List
-Monitors submitted lists for the current session. If none of the submitters (SUBMITTER_ADDRESSES) made a submission during the first half of the session, this module will send emails to the watchers (WATCHERS) more and more frequently until either:
-- One of the submitters (SUBMITTER_ADDRESSES) submits a list;
-- One of the submitters (SUBMITTER_ADDRESSES) disarms the alarm.
+Monitors submitted lists for the current session. If none of the submitters (WHITELISTED_ADDRESSES) made a submission during the first half of the session, this module will send emails to the watchers (WATCHERS) more and more frequently until either:
+- One of the submitters (WHITELISTED_ADDRESSES) submits a list;
+- One of the submitters (WHITELISTED_ADDRESSES) disarms the alarm.
 
 ### 3. Pass Period
 If the submission period of the current session is over is not marked as disputed, the bot will submit a transaction to execute submissions:
@@ -32,7 +32,7 @@ If the submission period of the current session is over is not marked as dispute
 - If there is more than one submission, it will raise a dispute.
 
 ### 4. Submit List
-If we are approaching the end of the submission period (LIST_SUBMISSION_THRESHOLD_SECONDS) and none of the submitters (SUBMITTER_ADDRESSES) made a submission, the bot will submit an empty list.
+If we are approaching the end of the submission period (LIST_SUBMISSION_THRESHOLD_SECONDS) and none of the submitters (WHITELISTED_ADDRESSES) made a submission, the bot will submit an empty list.
 > This will raise a dispute if someone made a submission.
 
 > The bot's wallet needs to have enough ETH to pay for gas + the submission deposit.

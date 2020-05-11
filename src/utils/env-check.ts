@@ -20,18 +20,18 @@ if (
   process.exit(1)
 }
 
-if (!process.env.SUBMITTER_ADDRESSES) {
+if (!process.env.WHITELISTED_ADDRESSES) {
   console.error(
-    'Submitter addresses not set. Please set the SUBMITTER_ADDRESSES environment variable.'
+    'Submitter addresses not set. Please set the WHITELISTED_ADDRESSES environment variable.'
   )
   process.exit(1)
 }
 
 try {
-  const submitterAddresses = JSON.parse(process.env.SUBMITTER_ADDRESSES)
+  const submitterAddresses = JSON.parse(process.env.WHITELISTED_ADDRESSES)
   if (!Array.isArray(submitterAddresses)) {
     console.error(
-      'SUBMITTER_ADDRESSES should be an array of checksummed addresses'
+      'WHITELISTED_ADDRESSES should be an array of checksummed addresses'
     )
     process.exit(1)
   }
@@ -39,9 +39,9 @@ try {
   // getAddress will throw if one of the addresses is not a checksummed address.
   submitterAddresses.forEach(submitterAddr => getAddress(submitterAddr))
 } catch (err) {
-  console.error('Error in SUBMITTER_ADDRESSES env variable.')
+  console.error('Error in WHITELISTED_ADDRESSES env variable.')
   console.error(
-    'SUBMITTER_ADDRESSES should be an array of checksummed addresses'
+    'WHITELISTED_ADDRESSES should be an array of checksummed addresses'
   )
   throw err
 }
@@ -115,6 +115,23 @@ if (
 ) {
   console.error(
     'Watchers should be an object mapping emails to nicknames. Please set the WATCHERS environment variable.'
+  )
+  process.exit(1)
+}
+
+if (!process.env.SUBMITTERS) {
+  console.error(
+    'Submitters object not set. Please set the SUBMITTERS environment variable.'
+  )
+  process.exit(1)
+}
+
+if (
+  typeof JSON.parse(process.env.SUBMITTERS) !== 'object' ||
+  JSON.parse(process.env.SUBMITTERS) === null
+) {
+  console.error(
+    'Submitters should be an object mapping emails to nicknames. Please set the SUBMITTERS environment variable.'
   )
   process.exit(1)
 }

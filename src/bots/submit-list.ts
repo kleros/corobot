@@ -21,7 +21,7 @@ interface SubmitListParams {
 // below are met:
 // - We passed LIST_SUBMISSION_THRESHOLD_SECONDS;
 // - The session is not over;
-// - None lists were submitted by SUBMITTER_ADDRESSES;
+// - None lists were submitted by WHITELISTED_ADDRESSES;
 // - The alarm is not disarmed for this session.
 export default async ({
   governor,
@@ -88,7 +88,7 @@ export default async ({
   }
 
   const submitterAddresses = JSON.parse(
-    process.env.SUBMITTER_ADDRESSES as string
+    process.env.WHITELISTED_ADDRESSES as string
   ).map((submitter: string) => getAddress(submitter))
   submitterAddresses.push(signerAddress)
 
@@ -102,7 +102,7 @@ export default async ({
   }
 
   console.info(
-    'Alarm is not disarmed, submission threshold passed and none of SUBMITTER_ADDRESSES sent a list.'
+    'Alarm is not disarmed, submission threshold passed and none of WHITELISTED_ADDRESSES sent a list.'
   )
   console.info('Submitting empty list...')
 

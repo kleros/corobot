@@ -57,11 +57,12 @@ export default async ({
       })
     )
     const submitterAddresses = JSON.parse(
-      process.env.SUBMITTER_ADDRESSES as string
+      process.env.WHITELISTED_ADDRESSES as string
     ).map((submitter: string) => getAddress(submitter))
     submitterAddresses.push(signerAddress)
 
     await alarm({
+      emails: JSON.parse(process.env.SUBMITTERS as string),
       subject: `New Period: Please submit a list.`,
       message: `A new session started on the Kleros Governor.
       <br>

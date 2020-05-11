@@ -23,7 +23,7 @@ const buildRouter = (db: Level) => {
         return
       }
 
-      const submitterAddresses = JSON.parse(process.env.SUBMITTER_ADDRESSES as string)
+      const submitterAddresses = JSON.parse(process.env.WHITELISTED_ADDRESSES as string)
       if (!submitterAddresses.includes(signerAddr)) {
         res.status(401).send({
           errors: [`Address not authorized to disarm the alarm.`],
