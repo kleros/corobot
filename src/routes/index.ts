@@ -13,9 +13,9 @@ const buildRouter = (db: Level) => {
     try {
       const { signature, signerAddr: claimedSignerAddr } = req.body
       const message = `Kleros Alarm Auth: My address is ${claimedSignerAddr}.`
-      const signerAddr = ethers.utils.verifyMessage(message, signature)
+      const signerAddr = ethers.utils.getAddress(ethers.utils.verifyMessage(message, signature))
 
-      if (signerAddr !== claimedSignerAddr) {
+      if (signerAddr !== ethers.utils.getAddress(claimedSignerAddr)) {
         res.status(401).send({
           errors: [`Claimed address does not match recovered address`],
           status: 'failed'

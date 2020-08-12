@@ -21,12 +21,8 @@ interface NoListSubmittedParams {
 // Sends an email to every SUBMITTER if we entered a new
 // period, requesting that an empty list be submitted.
 export default async ({
-  governor,
   lastApprovalTime,
-  timestamp,
-  currentSessionNumber,
   chainName,
-  submissionTimeout,
   chainId,
   signerAddress,
   db
