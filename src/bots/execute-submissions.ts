@@ -1,10 +1,9 @@
 import { ethers, Contract } from 'ethers'
 import { NO_LIST_SUBMITTED } from '../utils/db-keys'
-import alarm from '../utils/alarm'
 import { NO_DISPUTE } from '../utils/enums'
 import { BigNumber } from 'ethers/utils'
 
-const { bigNumberify, getAddress } = ethers.utils
+const { bigNumberify } = ethers.utils
 
 interface PassPeriodParams {
   governor: Contract,
@@ -27,9 +26,6 @@ export default async ({
   currentSessionNumber,
   timestamp,
   db,
-  chainName,
-  chainId,
-  signerAddress
 }: PassPeriodParams) => {
   const session = await governor.sessions(currentSessionNumber)
 

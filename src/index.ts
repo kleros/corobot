@@ -12,21 +12,17 @@ import * as express from 'express'
 import * as logger from 'morgan'
 import * as cors from 'cors'
 import * as bodyParser from 'body-parser'
-import * as _KlerosGovernor from '@kleros/kleros/build/contracts/KlerosGovernor.json'
+import * as _KlerosGovernor from './abis/KlerosGovernor.json'
 import * as _IArbitrator from '@kleros/erc-792/build/contracts/IArbitrator.json'
 import * as path from "path"
 import { AddressInfo } from 'net'
 
-import passPeriod from './bots/pass-period'
-import noListSubmitted from './bots/emergency-warn'
-import notifySubmitters from './bots/initial-warn'
+import passPeriod from './bots/execute-submissions'
 import executeApproved from './bots/execute-approved'
 
 const bots: Function[] = [
   passPeriod,
-  noListSubmitted,
   executeApproved,
-  notifySubmitters
 ]
 
 // Setup provider contract instance.
@@ -34,7 +30,7 @@ const provider = new ethers.providers.JsonRpcProvider(process.env.PROVIDER_URL)
 const signer = new ethers.Wallet(process.env.WALLET_KEY as string, provider)
 const governor = new ethers.Contract(
   process.env.GOVERNOR_ADDRESS as string,
-  _KlerosGovernor.abi,
+  _KlerosGovernor,
   signer
 )
 
@@ -104,6 +100,49 @@ setInterval(
     : 5 * 60 * 1000 // Default, 5 minutes
 )
 
+// Setup event listener bots.
+;(async () => {
+  const { name: chainName, chainId } = await provider.getNetwork()
+  governor.on("ListSubmitted", async from => {
+    // Is the submitter one of WHITELISTED_ADDRESSES?
+    const submitterAddresses = JSON.parse(
+      process.env.WHITELISTED_ADDRESSES as string
+    ).map((submitter: string) => getAddress(submitter))
+
+    if (
+      !submitterAddresses.includes(getAddress(from))
+    ) {
+      await alarm({
+        emails: JSON.parse(process.env.WATCHERS as string),
+        subject: `Governor Warning: Unknown submitter.`,
+        message: `Someone submitted a list to governor from an address that is in the submitters list.
+        <br>
+        <br>Please visit <a href="${
+          process.env.GOVERNOR_URL
+        }">the governor UI</a> to check the submission:
+        <br>
+        <br>- If the team thinks the submission is OK, one of the submitters can disarm the alarm by visiting the UI <a href="${
+          process.env.BOT_URL
+        }">here</a>.
+        <br>
+        <br>- If the submission is not ok, please submit a list (from one of the submitter addresses) to generate a dispute.
+        <br>
+        <br>The bot will continue issuing warning emails until one of the submitters either submit a list or disarms the alarm for this session.
+        <br>
+        <br>The submitters are:${submitterAddresses.map(
+          (submitterAddress: string) => `<br>${submitterAddress}`
+        )}`,
+        chainName,
+        chainId,
+        secondary: `To disable the alarm for this session, click <a href="${process.env.BOT_URL}">here</a>`,
+        templateId: process.env.WARNING_TEMPLATE_ID
+      })
+
+      console.info('Dispatched unknown submitter email alarm.')
+    }
+  });
+})()
+
 // Configure and start server.
 // The server is used to watch the alarm status and request disarm.
 
@@ -130,6 +169,8 @@ const onError = (error: { syscall: string, code: string }) => {
 }
 
 import routerBuilder from './routes'
+import { getAddress } from 'ethers/utils'
+import alarm from './utils/alarm'
 const router = routerBuilder(db)
 
 const app = express()
