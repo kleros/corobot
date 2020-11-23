@@ -19,10 +19,12 @@ import { AddressInfo } from 'net'
 
 import passPeriod from './bots/execute-submissions'
 import executeApproved from './bots/execute-approved'
+import unknownSubmitter from './bots/unknown-submitter'
 
 const bots: Function[] = [
   passPeriod,
   executeApproved,
+  unknownSubmitter
 ]
 
 // Setup provider contract instance.
@@ -100,49 +102,6 @@ setInterval(
     : 5 * 60 * 1000 // Default, 5 minutes
 )
 
-// Setup event listener bots.
-;(async () => {
-  const { name: chainName, chainId } = await provider.getNetwork()
-  governor.on("ListSubmitted", async from => {
-    // Is the submitter one of WHITELISTED_ADDRESSES?
-    const submitterAddresses = JSON.parse(
-      process.env.WHITELISTED_ADDRESSES as string
-    ).map((submitter: string) => getAddress(submitter))
-
-    if (
-      !submitterAddresses.includes(getAddress(from))
-    ) {
-      await alarm({
-        emails: JSON.parse(process.env.WATCHERS as string),
-        subject: `Governor Warning: Unknown submitter.`,
-        message: `Someone submitted a list to governor from an address that is in the submitters list.
-        <br>
-        <br>Please visit <a href="${
-          process.env.GOVERNOR_URL
-        }">the governor UI</a> to check the submission:
-        <br>
-        <br>- If the team thinks the submission is OK, one of the submitters can disarm the alarm by visiting the UI <a href="${
-          process.env.BOT_URL
-        }">here</a>.
-        <br>
-        <br>- If the submission is not ok, please submit a list (from one of the submitter addresses) to generate a dispute.
-        <br>
-        <br>The bot will continue issuing warning emails until one of the submitters either submit a list or disarms the alarm for this session.
-        <br>
-        <br>The submitters are:${submitterAddresses.map(
-          (submitterAddress: string) => `<br>${submitterAddress}`
-        )}`,
-        chainName,
-        chainId,
-        secondary: `To disable the alarm for this session, click <a href="${process.env.BOT_URL}">here</a>`,
-        templateId: process.env.WARNING_TEMPLATE_ID
-      })
-
-      console.info('Dispatched unknown submitter email alarm.')
-    }
-  });
-})()
-
 // Configure and start server.
 // The server is used to watch the alarm status and request disarm.
 
@@ -169,9 +128,7 @@ const onError = (error: { syscall: string, code: string }) => {
 }
 
 import routerBuilder from './routes'
-import { getAddress } from 'ethers/utils'
-import alarm from './utils/alarm'
-const router = routerBuilder(db)
+const router = routerBuilder(db, governor)
 
 const app = express()
 app.use('*', cors())

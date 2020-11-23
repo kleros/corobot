@@ -1,4 +1,4 @@
-import { ethers } from 'ethers'
+import { Contract, ethers } from 'ethers'
 import * as express from 'express'
 import * as cors from 'cors'
 
@@ -7,7 +7,7 @@ import { NO_LIST_SUBMITTED } from '../utils/db-keys'
 
 const router = express.Router()
 
-const buildRouter = (db: Level) => {
+const buildRouter = (db: Level, governor: Contract) => {
   router.all('*', cors())
   router.post('/disarm', cors(), validateSchema('disarm'), async (req, res) => {
     try {
@@ -32,8 +32,10 @@ const buildRouter = (db: Level) => {
         return
       }
 
+      const sessionNumber = await governor.getCurrentSessionNumber()
+
       const savedState = JSON.parse(await db.get(NO_LIST_SUBMITTED))
-      savedState.disarmed = true
+      savedState.disarmed = Number(sessionNumber)
       await db.put(NO_LIST_SUBMITTED, JSON.stringify(savedState))
       res.status(200).send({
         message: `Alarm disarmed for this period.`,

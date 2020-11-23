@@ -31,17 +31,8 @@ If the submission period of the current session is over is not marked as dispute
 - If there is only one submitted list, it will mark it as approved and move the contract to the next session.
 - If there is more than one submission, it will raise a dispute.
 
-### 4. Submit List
-If we are approaching the end of the submission period (LIST_SUBMISSION_THRESHOLD_SECONDS) and none of the submitters (WHITELISTED_ADDRESSES) made a submission, the bot will submit an empty list.
-> This will raise a dispute if someone made a submission.
-
-> The bot's wallet needs to have enough ETH to pay for gas + the submission deposit.
-
-### 5. Alarm UI
+### 4. Alarm UI
 The Alarm UI allows the submitters to disarm the alarm for the current session. A web3 enabled browser is required.
-
-### 6. Submitters Alarm
-This sends out an email requesting that contacts of the SUBMITTERS object submit a list to the governor. It runs once per period.
 
 ## Prerequisites
 

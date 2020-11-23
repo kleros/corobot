@@ -28,7 +28,6 @@ export default async ({
   db,
 }: PassPeriodParams) => {
   const session = await governor.sessions(currentSessionNumber)
-
   // Are we still in the submission period?
   if (
     bigNumberify(timestamp)
@@ -49,7 +48,7 @@ export default async ({
         lastAlarmTime: 0,
         notificationCount: 0,
         currentSessionNumber: currentSessionNumber.toNumber() + 1,
-        disarmed: false
+        disarmed: 0
       })
     )
     console.info('Done calling executeSubmissions.')
