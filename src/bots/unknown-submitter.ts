@@ -100,7 +100,7 @@ export default async ({
     await alarm({
       emails: JSON.parse(process.env.WATCHERS as string),
       subject: `Governor Warning: Unknown submitter.`,
-      message: `Someone submitted a list to governor from an address that is in the submitters list.
+      message: `Someone submitted a list to governor from an address that is not in the submitters list.
       <br>
       <br>Please visit <a href="${
         process.env.GOVERNOR_URL
